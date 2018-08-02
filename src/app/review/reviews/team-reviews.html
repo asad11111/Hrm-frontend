@@ -1,0 +1,183 @@
+<page-header title="Team Reviewee Detail"></page-header>
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title hide">
+                    <h5 class="box-title">Reviews</h5>
+                </div>
+                <div class="ibox-content">
+
+
+                    <div *ngIf="rloaded==false" class="box box-primary">
+                        <div class="box-header with-border">
+                            <h2 class="box-title text-info">Loading ...</h2>
+                        </div>
+                    </div>
+
+                    <div *ngIf="reviews.length==0 && rloaded==true" class="box box-primary">
+                        <div class="box-header with-border">
+                            <h2 class="box-title text-info">Record not found.</h2>
+                        </div>
+                    </div>
+
+
+                    <div *ngFor="let s of reviews" class="panel panel-primary">
+                        <div class="panel-heading"> {{s.title}} <small>( {{s.date_range}})</small></div>
+                        <div class="panel-body">
+                            <!-- Conversations are loaded here -->
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Reviewee</th>
+                                        <th>Self</th>
+                                        <th>Rating</th>
+                                        <th>Direct report / Peers</th>
+                                        <th>Manager</th>
+                                        <th>Action </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let d of s.reviewees" id="review_{{d.id}}">
+                                        <td><a class="cursor-point" (click)="select_reviewee(d)"> {{ d.first_name }} {{ d.last_name }} <small>({{d.designation}})</small> </a></td>
+                                        <td>
+                                            <span *ngFor="let p of d.peers">
+                                    <button *ngIf="d.id == p.id"  class="btn btn-xs btn-success" ><i class="fa fa-check" ></i></button>
+                                </span>
+                                        </td>
+                                        <td>{{d.rating}}</td>
+                                        <td><span *ngFor="let p of d.peers" class="text">{{p.first_name }} {{p.last_name }} <small>({{p.designation}})</small>
+                            <i *ngIf="p.status==2"  class="fa text-success fa-check" ></i> <br></span></td>
+                                        <td><span *ngFor="let m of d.managers" class="text">{{m.first_name }} {{m.last_name }} <small>({{m.designation}})</small> 
+                            <i *ngIf="m.status==2"  class="fa text-success fa-check" ></i><br></span></td>
+                                        <td><button type="button" (click)="select_reviewee(d)" class="btn btn-xs btn-primary">View Details</button>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                            <!-- /.direct-chat-pane -->
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div bsModal class="modal fade" [config]="{backdrop: false}" #reviewee_details_popup="bs-modal" id="reviewee_details_popup"
+    tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" (click)="reviewee_details_popup.hide()" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Reviewee Details</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="box box-success">
+                        <div class="box-header with-border">
+                            Name:<span class="text text-bold"> {{data.employee.employee.first_name}} {{data.employee.employee.last_name}}</span><br>                            Department: <span class="text text-bold"> {{data.employee.department.name}}</span><br> Designation:
+                            <span class="text text-bold">{{data.employee.designation.name}}</span><br>
+                            <div class="box-tools pull-right">
+                                <p>Rating: <span class="text text-success text-bold">{{reviewee_rating()}} </span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.col-md-12 -->
+
+                <div class="col-md-12">
+                    <div class="box box-primary">
+                        <div class="box-body">
+                            <table class="table table-hover table-bordered table-stripped" *ngIf="data.categories.length>0">
+                                <thead>
+                                    <tr>
+                                        <th>Average Review Score</th>
+                                        <th>Manager</th>
+                                        <th>Direct Report</th>
+                                        <th>Peers</th>
+                                        <th>Self</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>Overall</th>
+                                        <th>{{getAvgRating('Manager')}}</th>
+                                        <th>{{getAvgRating('Direct Report')}}</th>
+                                        <th>{{getAvgRating('Peer')}}</th>
+                                        <th>{{getAvgRating('Self')}}</th>
+                                    </tr>
+                                    <tr *ngFor="let c of data.categories">
+                                        <td>{{ c.title }}</td>
+                                        <td>{{getAvgRatingByCategory('Manager', c.id)}}</td>
+                                        <td>{{getAvgRatingByCategory('Direct Report', c.id)}}</td>
+                                        <td>{{getAvgRatingByCategory('Peer', c.id)}}</td>
+                                        <td>{{getAvgRatingByCategory('Self', c.id)}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.col-md-12 -->
+
+                <div class="col-md-12">
+                    <div class="box box-success">
+                        <div class="box-body">
+                            <table class="table table-stripped" *ngIf="data.categories.length>0">
+                                <thead>
+                                    <tr>
+                                        <th>Question</th>
+                                        <th>Manager</th>
+                                        <th>Direct Report</th>
+                                        <th>Peers</th>
+                                        <th>Self</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngFor="let item of data.questions | groupBy: 'category_id'">
+                                    <tr class="text text-bold text-success">
+                                        <th colspan="6">{{getCategory(item.key).title}}</th>
+                                    </tr>
+                                    <tr *ngFor="let q of item.value; let i = index;">
+                                        <td>
+                                            <span class="text-bold">{{i + 1}}. {{ q.title }}
+                                                <span *ngIf="reviewConfig.config.weightages_visible_employees != '0'">
+                                                        (<i class="fa fa-balance-scale"></i>:{{q.weight}})
+                                                </span>
+                                            </span><br>
+                                            <p style="margin-left: 15px">{{ q.description }}</p>
+</td>
+<td>{{getAvgRatingByQuestion('Manager', q.id)}}</td>
+<td>{{getAvgRatingByQuestion('Direct Report', q.id)}}</td>
+<td>{{getAvgRatingByQuestion('Peer', q.id)}}</td>
+<td>{{getAvgRatingByQuestion('Self', q.id)}}</td>
+<td>{{getTotalAverageByQuestion(q.id)}}</td>
+</tr>
+
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- /.col-md-12 -->
+<div class="modal-footer">
+    <button class="btn btn-primary" (click)="reviewee_details_popup.hide()"> Close </button>
+</div>
+</div>
+<!-- /.modal-body -->
+</div>
+<!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<confirm #confirm></confirm>
+<alert #alert></alert>

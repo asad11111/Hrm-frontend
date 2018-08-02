@@ -1,0 +1,9 @@
+<modal [show]="show" title="Employee Pic" (hide)="onHide.emit()">
+    <div body>
+        <img-cropper [image]="data" [settings]="cropperSettings"></img-cropper>
+    </div>
+    <div footer>
+        <button class="btn btn-default" (click)="onHide.emit()">Close</button>
+        <button class="btn btn-primary" (click)="done()">Done</button>
+    </div>
+</modal>

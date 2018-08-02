@@ -1,0 +1,87 @@
+<page-header title="My Leaves"></page-header>
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <box [busy]="fetching">
+                <div header>
+                    <button class="btn btn-primary btn-xs pull-right"
+                            (click)="leave = {}">
+                        <i class="fa fa-plus"></i> Submit Application
+                    </button>
+                    <h3 class="box-title">Leaves
+                        <span class="text-bold text-primary" style="font-size: 0.8em">
+                            (Remaining: {{ stats.totalLeaves - stats.leavesCount }}, Total: {{stats.totalLeaves}})
+                    </span>
+                    </h3>
+                </div>
+                <div class="ibox-content" body>
+                    <!--<h4 class="text-center" *ngIf="!auth.data.employee.parent_id">-->
+                        <!--You don't need to submit application for leave.-->
+                    <!--</h4>-->
+                    <h4 class="text-center" *ngIf="fetched && leaves.length == 0">
+                        You haven't submitted any leave applications yet.
+                    </h4>
+                    <table class="table table-stripped" *ngIf="fetched && leaves.length > 0">
+                        <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Status</th>
+                            <th>From Date</th>
+                            <th>To Date</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let l of leaves">
+                            <td>
+                                <a href="" (click)="show($event, l)">
+                                    {{ l.subject }}
+                                </a>
+                            </td>
+                            <td>
+                                <span [ngClass]="['label', labelClasses[l.status]]">
+                                    {{status[l.status]}}
+                                </span>
+                            </td>
+                            <td>{{ l.start_date | date: 'mediumDate' }}</td>
+                            <td>{{ l.end_date | date: 'mediumDate' }}</td>
+                            <td>
+                                <button class="btn btn-danger btn-xs"
+                                        (click)="destroy(l)"
+                                        [disabled]="l.status != '0'">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                                <button class="btn btn-default btn-xs"
+                                        (click)="edit(l)"
+                                        [disabled]="l.status != '0'">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </box>
+        </div>
+    </div>
+</div>
+
+<submit-leave [leave]="leave"
+              (onHide)="leave = null"
+              (onCreate)="created($event)"
+              (onUpdate)="updated($event)"
+
+>
+</submit-leave>
+
+<leave [leave]="leaveModal.leave"
+       [show]="leaveModal.show"
+       [employees]="leaveModal.employees"
+       [departments]="leaveModal.departments"
+       [designations]="leaveModal.designations"
+       [requests]="leaveModal.requests"
+       (onHide)="leaveModal.show = false">
+</leave>
+
+<confirm #confirm></confirm>

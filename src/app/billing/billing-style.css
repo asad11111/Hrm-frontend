@@ -1,0 +1,16 @@
+.no-margin{
+    margin-top: 0px !important;
+}
+
+.no-padding{
+    padding: 0px;
+}
+
+.no-liststyle,.no-liststyle li{
+    list-style: none;
+}
+.packag-content{
+    padding: 15px 0px;
+    text-align: center;
+    min-height: 110px;
+}

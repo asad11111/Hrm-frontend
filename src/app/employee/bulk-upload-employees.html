@@ -1,0 +1,46 @@
+<page-header title="Employees"></page-header>
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <box [busy]="saving">
+                <div header>
+                    <div class="pull-right">
+                        <a class="btn btn-xs btn-default"
+                           href="/core/api/v1/samples/employees_bulk_import"
+                           download
+                        >Download Sample
+                        </a>
+                    </div>
+                    <h3 class="box-title"><strong>Bulk Upload</strong> Employee</h3>
+                </div>
+
+                <div class="ibox-content clearfix" body>
+
+                    <errors [errors]="errors"></errors>
+                    <form class="form-inline" name="bulkUpload">
+                        <div class="form-group">
+                            <label>Upload File</label>
+                            <input type="file"
+                                   class="form-control"
+                                   name="employees"
+                                   (change)="uploadFile()"
+                                   #inputFile
+                            >
+                        </div>
+                        <btn type="primary"
+                             *ngIf="retry"
+                             (click)="uploadFile()"
+                        ><i class="fa fa-refresh"></i>
+                        </btn>
+                    </form>
+                    <div *ngIf="employees.length > 0">
+                        {{employees | json }}
+                    </div>
+
+                </div>
+
+            </box>
+        </div>
+    </div>
+</div>

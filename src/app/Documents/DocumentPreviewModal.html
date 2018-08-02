@@ -1,0 +1,29 @@
+<modal [show]="doc != null"
+       (hide)="onHide.emit()"
+       size="lg"
+       title="Upload Document">
+    <div body *ngIf="doc != null">
+        <iframe [src]="doc.file_path | safe: 'url'"
+                *ngIf="doc.type !== '0'"
+                style="min-height: 400px; width: 100%"
+        ></iframe>
+        <img [src]="doc.file_path"
+             *ngIf="doc.type === '0'"
+             class="img-responsive">
+    </div>
+    <div footer *ngIf="doc != null">
+        <button class="btn btn-danger btn-outline"
+                (click)="destroy(doc)"
+        >
+            <i class="fa fa-trash"></i> Delete
+        </button>
+        <a class="btn btn-primary btn-outline"
+           [href]="doc.file_path"
+           download>
+            <i class="fa fa-download"></i> Download
+        </a>
+    </div>
+</modal>
+
+<confirm #confirm>
+</confirm>

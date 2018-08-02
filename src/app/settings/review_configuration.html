@@ -1,0 +1,63 @@
+<div class="ibox">
+    <div class="ibox-title"> Review configurations 
+        <button style="margin-left:5px;" class="btn btn-primary btn-xs pull-right" (click)="resetConfig()"> 
+          <i class="fa fa-refresh" ></i> Reset Review settings </button> 
+
+          <button (click)="save_review_config()" class="btn btn-primary btn-xs pull-right"> <i class="fa fa-save" ></i> {{btn}} </button>
+    </div>
+    <div class="ibox-content clearfix">
+
+
+        <table class="table table-bordered configurations">
+            <thead>
+              <tr>
+                <th>Details</th>
+                <th>Options </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let s of settings;let i=index;">
+                <td><strong> {{s.title}}</strong></td>
+                <td>
+                  <div *ngIf="s.options.length > 5 && s.type!='type'">
+                    <select [name]="'option_'+ i" [(ngModel)]="s.value" class="form-control">
+                          <option *ngFor="let opt of s.options"  value="{{opt.value}}" >{{opt.label}}</option>
+                       </select>
+                  </div>
+      
+                  <div class="col-md-6" *ngIf="s.type.trim()=='text'">
+                    <input type="text" [name]="'option_'+ i" [(ngModel)]="s.value" class="form-control">
+                  </div>
+      
+                  <ul *ngIf="s.options.length < 6 && s.type!='type'" class="list-style-none">
+                    <li *ngFor="let opt of s.options;let k=index;">
+                      <div *ngIf="s.type=='radio'" class="radio">
+                        <input [id]="'option_'+ i + k" [name]="'option_'+ i" [(ngModel)]="s.value" value="{{opt.value}}" type="radio">
+                        <label htmlFor="option_{{i}}{{k}}"> {{opt.label}} </label>
+                      </div>
+                      <div *ngIf="s.type=='checkbox'" class="checkbox">
+      
+                        <input [class]="s.id + opt.value" [attr.checked]="true" *ngIf="freq_exist(opt.value,s.value)==true" [id]="'option_'+ i + k"
+                          [name]="'option_'+ i +'[]'" (click)="change_value($event.target,s.id,s.value)" [value]="opt.value" type="checkbox"
+                        />
+      
+                        <input [class]="s.id + opt.value" *ngIf="freq_exist(opt.value,s.value)==false" [id]="'option_'+ i + k" [name]="'option_'+ i +'[]'"
+                          (click)="change_value($event.target,s.id,s.value)" [value]="opt.value" type="checkbox" />
+                        <label htmlFor="option_{{i}}{{k}}"> {{opt.label}} </label>
+      
+                      </div>
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="form-group">
+              <div class="col-md-12">
+                <button (click)="save_review_config()" class="btn btn-primary"> {{btn}} </button>
+              </div>
+            </div>
+      
+   </div>
+   </div>

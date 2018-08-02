@@ -1,0 +1,71 @@
+<div>
+    <div style="width: 400px; margin: auto">
+
+        <div class="login-logo text-center">
+            <img src="/images/logo_peopleSonic.png" />
+        </div>
+
+        <div class="login-box ibox">
+
+            <div class="ibox-content">
+                <p class="login-box-msg"><strong></strong></p>
+
+                <errors [errors]="errors"></errors>
+                
+
+                <form>
+                    <div class="form-group has-feedback">
+                        <label>Email</label>
+                        <input type="email"
+                               name="email"
+                               id="email"
+                               class="form-control"
+                               placeholder="Email"
+                               [(ngModel)]="credentials.email"
+                        >
+                        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label>Password</label>
+                        <input type="password"
+                               name="password"
+                               id="password"
+                               class="form-control"
+                               [(ngModel)]="credentials.password"
+                               (keyup)="onKeyPress($event)"
+                               placeholder="Password"
+                        >
+                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="checkbox">
+                                <input type="checkbox">
+                                <label>Remember Me</label>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <a [routerLink]="['/password/forgot']" style="display: inline-block; margin-top: 10px; float: right">
+                                <i class="fa fa-lock"></i> Forgot Password
+                            </a><br>
+                            <a class="hide"  href=""><i class="fa fa-user"></i> Register</a>
+                        </div>
+                    </div>
+                </form>
+                <button class="btn btn-primary btn-block btn-flat"
+                        [disabled]="busy"
+                        (click)="login()">
+                    <span class="fa fa-spin fa-circle-o-notch" *ngIf="busy"></span>
+                    <span *ngIf="!busy">Login</span>
+
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="login-footer">
+        <span>
+        Copyright {{ copyrightYear }} @ PeopleSonic · All rights reserved. | Terms of service | Privacy policy
+        </span>
+</div>

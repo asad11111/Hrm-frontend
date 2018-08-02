@@ -1,0 +1,106 @@
+<page-header title="Review template and questions"></page-header>
+<div class="wrapper wrapper-content  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox">
+        <div class="ibox-title">
+          <div class="pull-right">
+            <input type="button" (click)="categories_form.show()" class="btn btn-xs btn-primary" value="Create new question category">
+            <a class="btn btn-xs btn-success" routerLink="/review/reviews"> back </a>
+          </div>
+          <h3 class="box-title"><strong>Template: </strong>{{review_template.title}}</h3>
+        </div>
+        <div class="ibox-content padding-b-50">
+          <table class="table table-bordered">
+            <tbody>
+              <tr *ngFor="let d of categories.data">
+                <td>
+                  <div class="col-lg-12 col-md-12" (click)="load_questions(d)" style="background:#eee;padding:8px;">
+                    <button class="btn-xs btn" (click)="load_questions(d)">
+                 <i class="glyphicon" 
+                 [ngClass]="{'glyphicon-minus':question_check(d) == true,'glyphicon-plus':question_check(d) == false}"></i>
+              </button>
+                    <a href="javascript:void(0)"> <strong>{{ d.title }}</strong> </a>
+
+                    <div class="loader-small pull-right hide loader_{{d.id}}"></div>
+                  </div>
+                  <table class="table table-bordered" *ngIf="question_check(d)" style="margin:0px">
+                    <tr class='{{(sub_questions.data.length > 0)?"":"hide"}}'>
+                      <th width="5%"> </th>
+                      <th width="35%">Title</th>
+                      <th width="60%">Details</th>
+                    </tr>
+                    <tr *ngFor="let question of sub_questions.data">
+                      <td>
+                        <div class="checkbox">
+                          <input (change)="save_questions(d,question)" id="question_{{question.id}}" type="checkbox" name="question_{{question.id}}"
+                            value="{{question.id}}" [(ngModel)]="question.selectedq" />
+                          <label htmlFor="question_{{question.id}}"></label>
+                        </div>
+                      </td>
+                      <td><label htmlFor="question_{{question.id}}"> {{question.title}} </label></td>
+                      <td>{{question.description}}</td>
+                    </tr>
+                    <tr class='{{(sub_questions.data.length > 0)?"hide":""}}'>
+                      <td colspan="3"> Record not found .</td>
+                    </tr>
+                  </table>
+
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+          <!--<pagination class="pull-right hide" [totalItems]="categories.total" [(ngModel)]="categories.current_page"></pagination>-->
+          <div class="row col-lg-12">
+            <a class="btn btn-primary pull-right" routerLink="/review/reviews/assign-weights/{{selected_review_template_id}}"> Assign weights </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- /.Add categories ........ -->
+<div bsModal [config]="{backdrop: false}" class="modal fade" #categories_form="bs-modal" id="categories_form">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" (click)="categories_form.hide()" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Question category</h4>
+      </div>
+      <div class="modal-body">
+        <errors [errors]="errors"></errors>
+        <div class="form-group">
+          <label>Category title</label>
+          <input [(ngModel)]="category.title" placeholder="Category title" class="form-control" id="title" name="title">
+        </div>
+        <div class="form-group">
+          <label>Category description</label>
+          <textarea [(ngModel)]="category.description" placeholder="category description" class="form-control " name="description"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Ordering</label>
+          <input [(ngModel)]="category.sorting" placeholder="1" class="form-control" id="sorting" name="sorting">
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+
+          <select [(ngModel)]="category.status" id="status" name="status" class="form-control">
+            <option selected value="1"> Active </option>
+            <option value="0"> Disable </option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" (click)="save_category()" class="btn btn-primary">{{review_template_btn}}</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

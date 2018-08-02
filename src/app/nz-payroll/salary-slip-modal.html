@@ -1,0 +1,188 @@
+<modal [show]="salarySlip != null"
+       (hide)="onHide.emit()"
+       size="ml"
+       [title]="'Salary Slip'">
+    <div body *ngIf="salarySlip">
+        <errors [errors]="errors"></errors>
+        <div class="pull-right">
+            <h5></h5>
+            <h5 class="text-info">
+                Overtime: {{toHours( salarySlip.attendance.work_stats.overtime ,'m')}}
+            </h5>
+            <h5 class="text-danger" *ngIf="salarySlip.attendance.reports.length === 0">
+                Employee has been not been on any duty.
+            </h5>
+        </div>
+        <h5>
+            Employee Name: <span class="text-success">{{employee?.first_name}} {{employee?.last_name}}</span>
+        </h5>
+        <h5>
+            Designation: {{employee?.designation}}
+        </h5>
+        <h5>
+            Date:
+            <span class="text-success">
+            {{payroll?.start_date | date: 'mediumDate'}} - {{payroll?.end_date | date: 'mediumDate'}}
+            </span>
+        </h5>
+
+        <hr>
+
+        <table class="table table-bordered text-center td-center table-condensed" *ngIf="salarySlip.attendance.reports.length">
+            <thead>
+            <tr>
+                <th>Shift</th>
+                <th>Total Days</th>
+                <th>Working Days</th>
+                <th>Present</th>
+                <th>Leaves</th>
+                <th>Holidays</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let a of salarySlip.attendance.reports">
+                <td>{{a.name}}</td>
+                <td>{{a.total_days}}</td>
+                <td>{{(a.total_days - a.holidays)}}</td>
+                <td>{{a.present}}</td>
+                <td>{{a.absent}}</td>
+                <td>{{a.holidays}}</td>
+            </tr>
+            </tbody>
+        </table>
+
+
+        <div class="clearfix">
+            <table class="table table-bordered td-center">
+                <thead>
+                <tr>
+                    <th>Earnings</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let a of filterAmounts('0')">
+                    <ng-container *ngIf="editingAmounts.indexOf(a) !== -1">
+                        <td>
+                            <input class="form-control" [(ngModel)]="a.title">
+                        </td>
+                        <td>
+                            <input type="number" class="form-control" [(ngModel)]="a.amount">
+                        </td>
+                        <td  class="text-center">
+                            <button class="btn btn-success btn-xs btn-outline" (click)="doneEdit(a)">
+                                <i class="fa fa-check"></i>
+                            </button>
+                            <button class="btn btn-danger btn-xs btn-outline" (click)="cancelEdit(a)">
+                                <i class="fa fa-close"></i>
+                            </button>
+                        </td>
+                    </ng-container>
+                    <ng-container *ngIf="editingAmounts.indexOf(a) === -1">
+                        <th>{{a.title}}</th>
+                        <td>
+                            {{a.amount}}
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-default btn-xs btn-outline"
+                                    (click)="editingAmounts.push(a)">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-xs btn-outline"
+                                    (click)="deleteAmount(a)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+                    </ng-container>
+                <tr>
+                    <th class="text-primary">Total Earnings</th>
+                    <th colspan="2" class="text-primary">{{getTotalSalary('0')}}</th>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix">
+            <table class="table table-bordered td-center">
+                <thead>
+                <tr>
+                    <th>Deductions</th>
+                    <th></th>
+                    <th class="text-center"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let a of filterAmounts('1')">
+                    <ng-container *ngIf="editingAmounts.indexOf(a) !== -1">
+                        <td>
+                            <input class="form-control" [(ngModel)]="a.title">
+                        </td>
+                        <td>
+                            <input type="number" class="form-control" [(ngModel)]="a.amount">
+                        </td>
+                        <td  class="text-center">
+                            <button class="btn btn-success btn-xs btn-outline" (click)="doneEdit(a)">
+                                <i class="fa fa-check"></i>
+                            </button>
+                            <button class="btn btn-danger btn-xs btn-outline" (click)="cancelEdit(a)">
+                                <i class="fa fa-close"></i>
+                            </button>
+
+                        </td>
+                    </ng-container>
+                    <ng-container *ngIf="editingAmounts.indexOf(a) === -1">
+                        <td>{{a.title}}</td>
+                        <td>
+                            {{a.amount}}
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-default btn-xs btn-outline"
+                                    (click)="editingAmounts.push(a)">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-xs btn-outline"
+                                    (click)="deleteAmount(a)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+                    </ng-container>
+                <tr>
+                    <th class="text-danger">Total Deductions</th>
+                    <th colspan="2" class="text-danger">{{getTotalSalary('1')}}</th>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered td-center">
+                <thead>
+                <tr>
+                    <th class="text-success">Net Salary</th>
+                    <th class="text-success">
+                        {{getTotalSalary('0')- getTotalSalary('1')}}
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+
+
+    </div>
+    <div footer>
+        <div class="pull-left">
+            <div class="dropup" dropdown [dropup]="true">
+                <button class="btn btn-success btn-ln" dropdownToggle>
+                    <i class="fa fa-plus"></i> Amount
+                </button>
+                <ul class="dropdown-menu" *dropdownMenu >
+                    <li><a (click)="newAmount('0')">Earning</a></li>
+                    <li><a (click)="newAmount('1')">Deduction</a></li>
+                </ul>
+            </div>
+        </div>
+        <button class="btn btn-default btn-ln" (click)="onHide.emit()">
+            Cancel
+        </button>
+        <button class="btn btn-primary btn-ln" (click)="save()" [disabled]="editingAmounts.length !== 0">
+            <i class="fa fa-check-circle-o"></i> Save
+        </button>
+    </div>
+</modal>

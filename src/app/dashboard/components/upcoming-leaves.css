@@ -1,0 +1,13 @@
+.upcoming-leaves {
+
+}
+.upcoming-leaves .upcoming-leave-item {
+    min-width: 270px;
+}
+
+.upcoming-leave-item small.label {
+    margin: 0;
+}
+.upcoming-leave-item .upcoming-leave-status {
+
+}

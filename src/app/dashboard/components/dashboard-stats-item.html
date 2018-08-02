@@ -1,0 +1,23 @@
+<div class="ibox">
+    <div class="ibox-content" style="padding: 10px">
+        <div class="dashboard-stat-item">
+            <div class="dashboard-stat-left" [ngStyle]="{'background': bg}">
+                <span [ngClass]="icon"></span>
+            </div>
+            <div class="dashboard-stat-right">
+                <div class="dashboard-stat-heading">
+                    <h5>{{title}}</h5>
+                    <span class="label label-success" [ngStyle]="{'background': bg}">{{label}}</span>
+                </div>
+                <div class="dashboard-stat-body">
+                    <h1 class="dashboard-stat-fig">{{fig || '??'}}</h1>
+                    <div class="stat-percent font-bold"
+                         [ngStyle]="{'margin-right': '6px', 'color': bg}">
+                        {{percentage}}
+                        <i class="fa fa-level-up"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

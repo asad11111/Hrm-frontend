@@ -1,0 +1,421 @@
+<modal [show]="state.show" (hide)="state.show = false" [title]="'Edit Employee'" size="lg">
+    <div body>
+        <div *ngIf="state.employee != null">
+            <errors [errors]="state.errors"></errors>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="thumbnail">
+                        <img [src]="getPicUrl()" class="img-responsive">
+                        <div class="caption">
+                            <button class="btn btn-default btn-xs" (click)="showPicModal = true">
+                                Change Pic
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <tabset>
+                        <tab heading="Basic">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>First Name</label>
+                                                <input type="text" class="form-control" [(ngModel)]="state.employee.first_name" name="first_name" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Gender</label>
+                                                <select [(ngModel)]="state.employee.gender" class="form-control">
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                            </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Last Name</label>
+                                                <input type="text" class="form-control" [(ngModel)]="state.employee.last_name" name="last_name" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Date of Birth</label>
+                                                <datepicker [(value)]="state.employee.date_of_birth"></datepicker>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 hide">
+                                            <div class="form-group">
+                                                <label>Father Name</label>
+                                                <input type="text" class="form-control" [(ngModel)]="state.employee.father_name" name="father_name">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                        </tab>
+                        <tab heading="Contact">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Country</label>
+                                                <input type="text" class="form-control" [(ngModel)]="state.employee.address.country" name="country">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>City</label>
+                                                <input type="text" class="form-control" [(ngModel)]="state.employee.address.city" name="city">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>State</label>
+                                                <input type="text" class="form-control" [(ngModel)]="state.employee.address.state" name="street">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label>Street Address</label>
+                                                <input type="text" class="form-control" [(ngModel)]="state.employee.address.street" name="street">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Zip Code</label>
+                                                <input type="text" class="form-control" [(ngModel)]="state.employee.address.zip" name="street">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Contact Number</label>
+                                                <input type="text" class="form-control" [(ngModel)]="state.employee.contact_number" name="contact_number" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                        </tab>
+                        <tab heading="Organization">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-10 col-md-offset-1">
+                                            <div class="form-horizontal">
+                                                <div class="form-group" *ngIf="state.employee.parent_id">
+                                                    <label class="control-label col-sm-2">Department</label>
+                                                    <div class="col-sm-9">
+                                                        <select2 [src]="'/core/api/v1/departments/list'"
+                                                                 [(value)]="state.employee.department_id">
+                                                        </select2>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group" *ngIf="state.employee.parent_id">
+                                                    <label class="control-label col-sm-2">Manager</label>
+                                                    <div class="col-sm-9">
+                                                        <select2 [src]="'/core/api/v1/employees/list'"
+                                                                 [(value)]="state.employee.parent_id"
+                                                                 [format]="'{first_name} {last_name}'"
+                                                        >
+                                                        </select2>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group has-feedback" *ngIf="state.employee.parent_id">
+                                                    <label class="col-sm-2">Designation</label>
+                                                    <div class="col-sm-9">
+                                                        <select2 [src]="'/core/api/v1/designations/list'"
+                                                                 [(value)]="state.employee.designation_id">
+                                                        </select2>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-2">Date of Joining</label>
+                                                    <div class="col-sm-9">
+                                                        <datepicker [(value)]="state.employee.date_of_joining"></datepicker>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group has-feedback" >
+                                                    <label class="col-sm-2">Employee status</label>
+                                                    <div class="col-sm-9">
+                                                        <select  class="form-control" [(ngModel)]="state.employee.emp_status" employee name="emaployee_status">
+                                                            <option value="1" > Active </option>
+                                                            <option value="2" > Inactive </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group has-feedback" >
+                                                    <label class="col-sm-2">Status reason</label>
+                                                    <div class="col-sm-9">
+                                                         <textarea class="form-control" name="status_reason" [(ngModel)]="state.employee.status_reason" ></textarea>
+                                                    </div>
+                                                </div>
+                                     
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                        </tab>
+                        <tab heading="Account">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-10 col-md-offset-1">
+                                            <div class="form-horizontal">
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label">Email</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" [(ngModel)]="state.user.email" name="email" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label">Password</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="password" class="form-control" [(ngModel)]="state.user.password" name="password" id="password" />
+                                                        <div class="help-box">Minimum 6 characters.</div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label">Retype Password</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="password" class="form-control" [(ngModel)]="state.user.password_confirmation" name="password_confirmation" id="password_confirmation"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group" *ngIf="state.employee.parent_id">
+                                                    <label class="col-sm-2 control-label">Role</label>
+                                                    <div class="col-sm-9">
+                                                        <select2 [src]="'/core/api/v1/roles/list'"
+                                                                 [(value)]="state.user.role_id">
+                                                        </select2>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </tab>
+                        <tab heading="Payroll" *ngIf="auth.hasModule('NZ-Payroll') && permission.can('NZ-Payroll.manage_nz_payroll_employee_configurations')">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-10 col-md-offset-1">
+                                        <div class="form-horizontal">
+
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Employee Type</label>
+                                                <div class="col-sm-7">
+                                                    <select [(ngModel)]="state.payroll.employee_type" name="employee_type" class="form-control">
+                                                        <option value="1">Permanent Employee</option>
+                                                        <option value="2">Casual Employee</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group" *ngIf="state.payroll.employee_type==2">
+                                                <label class="col-sm-4 control-label">Paid leaves each pay or 6 month later?</label>
+                                                <div class="col-sm-7">
+                                                    <select [(ngModel)]="state.payroll.casual_emp_leaves_paid_every_pay" name="casual_emp_leaves_paid_every_pay" class="form-control">
+                                                        <option value="0">Each Pay</option>
+                                                        <option value="1">6 months later</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Work Days in Week</label>
+                                                <div class="col-sm-7">
+                                                    <select [(ngModel)]="state.payroll.work_day_in_week" name="work_day_in_week" class="form-control">
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Work Hours in Day</label>
+                                                <div class="col-sm-7">
+                                                    <select [(ngModel)]="state.payroll.work_hours_in_day" name="work_hours_in_day" class="form-control">
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                        <option value="6">6</option>
+                                                        <option value="7">7</option>
+                                                        <option value="8">8</option>
+                                                        <option value="9">9</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Employeer KiwiSaver Contribution (%)</label>
+                                                <div class="col-sm-7">
+                                                    <select [(ngModel)]="state.payroll.employee_kiwisaver_contribution" name="employee_kiwisaver_contribution" class="form-control">
+                                                        <option value="4" selected="selected">4</option>
+                                                        <option value="5">5</option>
+                                                        <option value="8">8</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Employee IRD</label>
+                                                <div class="col-sm-7">
+                                                    <input type="text" class="form-control" [(ngModel)]="state.payroll.employee_ird" name="employee_ird"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Employee Tax Code</label>
+                                                <div class="col-sm-7">
+                                                    <select class="form-control" [(ngModel)]="state.payroll.emplyee_tax_code" name="emplyee_tax_code">
+                                                        <option value="M" selected="selected">M</option>
+                                                        <option value="ME">ME</option>
+                                                        <option value="M SL">M SL</option>
+                                                        <option value="ME SL">ME SL</option>
+                                                        <option value="SB">SB</option>
+                                                        <option value="S">S</option>
+                                                        <option value="S SL">S SL</option>
+                                                        <option value="SH">SH</option>
+                                                        <option value="SH SL">SH SL</option>
+                                                        <option value="ST">ST</option>
+                                                        <option value="ST SL">ST SL</option>
+                                                        <option value="WT">WT</option>
+                                                        <option value="STC">STC</option>
+                                                        <option value="CAE">CAE</option>
+                                                        <option value="EDW">EDW</option>
+                                                        <option value="ND">ND</option>
+                                                        <option value="NSW">NSW</option>
+                                                        <option value="SB SL">SB SL</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Child Support</label>
+                                                <div class="col-sm-7">
+                                                    <input type="number" class="form-control" [(ngModel)]="state.payroll.child_support" name="child_support"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Student Loan</label>
+                                                <div class="col-sm-7">
+                                                    <input type="number" class="form-control" [(ngModel)]="state.payroll.student_loan" name="student_loan"/>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">MOJ Deduction Starting</label>
+                                                <div class="col-sm-7">
+                                                    <datepicker [(value)]="state.payroll.moj_deduction_from"></datepicker>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label" title="Ministry Of Justice Fine">Total MOJ / Per Pay Deduction / Remaining</label>
+                                                <div class="col-sm-7">
+                                                    <div class="row">
+                                                        <div class="col-sm-4">
+                                                            <input placeholder="Total MOJ" type="number" [(ngModel)]="state.payroll.ministry_of_fine" name="ministry_of_fine" class="form-control" />
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <input placeholder="MOJ Deduction Per Pay" type="number" [(ngModel)]="state.payroll.moj_deduction_per_pay" name="moj_deduction_per_pay" class="form-control" />
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <input placeholder="Remaining MOJ" type="number" [(ngModel)]="state.payroll.remaining_moj" name="remaining_moj" class="form-control" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">PPN</label>
+                                                <div class="col-sm-7">
+                                                    <input type="text" class="form-control" [(ngModel)]="state.payroll.ppn_number" name="ppn_number"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Salary/Pay Rate</label>
+                                                <div class="col-sm-7">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">$</span>
+                                                        <input type="number" class="form-control" [(ngModel)]="state.payroll.employee_salary" name="employee_salary"/>
+                                                        <span class="input-group-addon">per {{employeer_pay_rate_type}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </tab>
+
+                        <tab heading="Leaves" *ngIf="auth.hasModule('NZ-Payroll') && permission.can('NZ-Payroll.manage_nz_payroll_employee_configurations')">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-10 col-md-offset-1">
+                                            
+                                            <div class="form-horizontal">
+                                                <div class="form-group">
+                                                    <label class="col-sm-4 control-label">Use Employee Leaves Settings</label>
+                                                    <div class="col-sm-7">
+                                                        <select name="use_emp_leaves" [(ngModel)]="state.payroll.use_emp_leaves" class="form-control">
+                                                            <option value="0">No</option>
+                                                            <option value="1">Yes</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+    
+                                                <div class="form-group" *ngIf="state.payroll.use_emp_leaves == 1">
+                                                    <label class="col-sm-4 control-label">Annual Leaves</label>
+                                                    <div class="col-sm-7">
+                                                        <input type="number" class="form-control" [(ngModel)]="state.payroll.annual_leaves" name="annual_leaves"/>
+                                                    </div>
+                                                </div>
+    
+                                                <div class="form-group" *ngIf="state.payroll.use_emp_leaves == 1">
+                                                    <label class="col-sm-4 control-label">Sick Leaves</label>
+                                                    <div class="col-sm-7">
+                                                        <input type="number" class="form-control" [(ngModel)]="state.payroll.sick_leaves" name="sick_leaves"/>
+                                                    </div>
+                                                </div>
+    
+                                                <div class="form-group" *ngIf="state.payroll.use_emp_leaves == 1">
+                                                    <label class="col-sm-4 control-label">Bareavement Leaves</label>
+                                                    <div class="col-sm-7">
+                                                        <input type="number" class="form-control" [(ngModel)]="state.payroll.bareavement_leaves" name="bareavement_leaves"/>
+                                                    </div>
+                                                </div>
+    
+                                            </div>
+    
+                                        </div>
+                                    </div>
+                                </div>
+                            </tab>
+                    </tabset>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div footer>
+        <btn (click)="store.updateEmployee()" type="primary" icon="fa fa-save" [busy]="state.saving">
+            Save
+        </btn>
+    </div>
+</modal>
+
+<employee-image-modal [show]="showPicModal" (onHide)="showPicModal = false" (onDone)="setImage($event)">
+</employee-image-modal>

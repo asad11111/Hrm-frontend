@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "rootDir": ".",
+    "lib": ["es2017.object", "es2015", "dom"],
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node"
+  },
+  "exclude": ["node_modules", "aot"],
+  "awesomeTypescriptLoaderOptions": {
+    "useWebpackText": true
+  },
+  "angularCompilerOptions": {
+    "debug": false
+  },
+  "compileOnSave": false,
+  "buildOnSave": false
+}

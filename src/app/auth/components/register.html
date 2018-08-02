@@ -1,0 +1,89 @@
+<div style="width: 400px; margin: auto">
+    <div class="login-box ibox">
+        <div class="login-logo text-center">
+            <img src="/images/logo_peopleSonic.png" />
+        </div>
+        <div class="ibox-content">
+
+            <errors [errors]="errors"></errors>
+
+            <div *ngIf="affiliate">
+                <label>Sign Up using Affiliate:</label>
+                <span>{{affiliate.first_name}} {{affiliate.last_name}}</span>
+            </div>
+
+            <form role="form" class="register-company-form">
+
+                <div class="form-group">
+                    <input type="text"
+                           name="name"
+                           id="name"
+                           class="form-control text-input"
+                           placeholder="Company Name"
+                           [readonly]="affiliation"
+                           [(ngModel)]="data.name"
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <input type="text"
+                           [(ngModel)]="data.number_of_employees" name="number_of_employees" id="number_of_employees" class="form-control text-input" placeholder="Number of Employees">
+                </div>
+
+
+                <div class="form-group">
+                    <input type="text" value=""
+                           [(ngModel)]="data.first_name"
+                           name="first_name" id="first_name" class="form-control text-input" placeholder="First Name">
+                </div>
+
+
+                <div class="form-group has-feedback">
+                    <input type="text" value=""
+                           [(ngModel)]="data.last_name"
+                           name="last_name" id="last_name"  class="form-control text-input" placeholder="Last Name">
+                </div>
+
+
+                <div class="form-group has-feedback">
+                    <input type="text" value=""
+                           [(ngModel)]="data.email"
+                           name="email"
+                           id="email"
+                           class="form-control text-input"
+                           placeholder="Email"
+                           [readonly]="affiliation"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <input  type="password"
+                            [(ngModel)]="data.password"
+                            name="password" id="password"    class="form-control text-input" placeholder="Password">
+                </div>
+
+
+                <div class="form-group">
+                    <input  type="password" [(ngModel)]="data.password_confirmation" name="password_confirmation" id="password_confirmation"    class="form-control text-input" placeholder="Confirm Password">
+                </div>
+                <div class="form-group">
+                    <button type="submit"
+                            (click)="register()"
+                            [disabled]="busy"
+                            class="btn btn-primary btn-block btn-flat">
+                            <i [ngClass]="{'fa fa-spinner fa-spin': busy}"></i>
+                        Register
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+<div class="login-footer">
+        <span>
+        Copyright {{ copyrightYear }} @ PeopleSonic · All rights reserved. | Terms of service | Privacy policy
+        </span>
+</div>

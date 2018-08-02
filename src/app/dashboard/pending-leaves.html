@@ -1,0 +1,27 @@
+<box>
+    <div header>
+        <h3 class="box-title">Leave Applications</h3>
+    </div>
+    <div body>
+        <h4 class="text-center" *ngIf="fetched && leaves.length == 0">
+            No Pending leaves
+        </h4>
+        <table class="table table-stripped" *ngIf="fetched && leaves.length > 0">
+            <thead>
+            <tr>
+                <th>Subject</th>
+                <th>By</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let l of leaves">
+                <td>
+                    <a [routerLink]="['/leaves', 'submitted']">{{l.subject}}</a>
+                </td>
+                <td>{{employees[l.submitted_by].first_name}} {{employees[l.submitted_by].last_name }}</td>
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
+</box>

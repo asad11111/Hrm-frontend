@@ -1,0 +1,56 @@
+<page-header title="Attendance Reports"></page-header>
+
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="tabs-container">
+                <ngb-tabset #tabs>
+
+                    <ngb-tab title="Daily Report"
+                             id="dailyReport"
+                             *ngIf="permissions.can('Attendance.manage_attendance')">
+                        <template ngbTabContent>
+                            <div class="panel-body">
+
+                                <attendance-daily-report [data]="dailyReport.data"
+                                                         [fetching]="dailyReport.fetching"
+                                                         (onFetch)="fetchDailyReport($event)">
+                                </attendance-daily-report>
+
+                            </div>
+                        </template>
+                    </ngb-tab>
+
+                    <ngb-tab title="Monthly Report"
+                             id="monthlyReport"
+                             *ngIf="permissions.can('Attendance.manage_attendance')"
+                    >
+                        <template ngbTabContent>
+                            <div class="panel-body">
+
+                                <attendance-monthly-report [data]="monthlyReport.data"
+                                                           [fetching]="monthlyReport.fetching"
+                                                           (onFetch)="fetchMonthlyReport($event)">
+                                </attendance-monthly-report>
+
+                            </div>
+                        </template>
+                    </ngb-tab>
+
+                    <ngb-tab title='Employee Report' id="employeeReport">
+                        <template ngbTabContent>
+                            <div class="panel-body">
+
+                                <attendance-employee-report [data]="employeeReport.data"
+                                                            [fetching]="employeeReport.fetching"
+                                                            (onFetch)="fetchEmployeeReport($event)"
+                                >
+                                </attendance-employee-report>
+
+                            </div>
+                        </template>
+                    </ngb-tab>
+                </ngb-tabset>
+            </div>
+        </div>
+    </div>

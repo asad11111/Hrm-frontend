@@ -1,0 +1,195 @@
+<div class="ibox">
+  <div class="ibox-title"> 
+      Payroll
+  </div>
+  <div class="ibox-content">
+        <div *ngIf="error.show" class="alert alert-danger"><span [innerHtml]="error.message"></span></div>
+        <div class="row">
+            <div class="col-md-12">
+                <!--tabset>
+                    <tab heading="Default Configurations">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h4>Leaves Settings</h4>
+                                    <div class="form-group">
+                                        <label>Working Days in Week</label>
+                                        <input disabled type="number" class="form-control" [(ngModel)]="default_configs.work_day_in_week" name="holidays"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Sick Leaves</label>
+                                        <input disabled type="number" class="form-control" [(ngModel)]="default_configs.sick_leaves" name="sick_leaves"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Annual Leaves</label>
+                                        <input disabled type="number" class="form-control" [(ngModel)]="default_configs.annual_leaves" name="annual_leaves"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Bareavement Leaves</label>
+                                        <input disabled type="number" class="form-control" [(ngModel)]="default_configs.bareavement_leaves" name="bareavement_leaves"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Public Holidays</label>
+                                        <input disabled type="number" class="form-control" [(ngModel)]="default_configs.public_holidays" name="public_holidays"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Alow Alternate Holiday?</label>
+                                        <select disabled [(ngModel)]="default_configs.alternate_holiday" name="alternate_holiday" class="form-control">
+                                            <option value="0">No</option>
+                                            <option value="1">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <h4>KiwiSaver Settings</h4>
+                                    <div class="form-group">
+                                        <label>KiwiSaver Member?</label>
+                                        <select disabled [(ngModel)]="default_configs.kiwisaver_member" name="kiwisaver_member" class="form-control">
+                                            <option value="0">No</option>
+                                            <option value="1">Yes</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Employeer KiwiSaver Contribution (%)</label>
+                                        <input disabled type="number" class="form-control" [(ngModel)]="default_configs.employeer_kiwisaver_contribution" name="employeer_kiwisaver_contribution"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Employee KiwiSaver Contribution (%)</label>
+                                        <input disabled type="number" class="form-control" [(ngModel)]="default_configs.employee_kiwisaver_contribution" name="employee_kiwisaver_contribution"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <h4>Other Settings</h4>
+                                    <div class="form-group">
+                                        <label>Employee Tax Code</label>
+                                        <input disabled type="text" class="form-control" [(ngModel)]="default_configs.emplyee_tax_code" name="emplyee_tax_code"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>PAYE Tax Rate (%)</label>
+                                        <input disabled type="number" class="form-control" [(ngModel)]="default_configs.paye_tax_rate" name="paye_tax_rate"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Pay Rate Type</label>
+                                        <select disabled [(ngModel)]="default_configs.pay_rate_type" name="pay_rate_type" class="form-control">
+                                            <option value="Hour">Hour</option>
+                                            <option value="Day">Day</option>
+                                            <option value="Week">Week</option>
+                                            <option value="Fortnightly">Fortnightly</option>
+                                            <option value="Month">Month</option>
+                                            <option value="Year">Year</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </tab>
+                </tabset-->
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h4>Leaves Settings</h4>
+                            <hr />
+
+                            <h3>Permanent Employee Leaves</h3>
+                            <div class="form-group">
+                                <label>Sick Leaves</label>
+                                <input min="0" minlength="0" max="10" maxlength="10" type="number" class="form-control" [(ngModel)]="employeer_configs.p_sick_leaves" name="p_sick_leaves"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Annual Leaves</label>
+                                <input min="0" minlength="0" max="30" maxlength="30" type="number" class="form-control" [(ngModel)]="employeer_configs.p_annual_leaves" name="p_annual_leaves"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Bareavement Leaves</label>
+                                <input min="0" minlength="0" max="10" maxlength="10" type="number" class="form-control" [(ngModel)]="employeer_configs.p_bareavement_leaves" name="p_bareavement_leaves"/>
+                            </div>
+
+                            <hr />
+                            <h3>Casual Employee Leaves</h3>
+                            <div class="form-group">
+                                <label>Sick Leaves</label>
+                                <input min="0" minlength="0" max="10" maxlength="10" type="number" class="form-control" [(ngModel)]="employeer_configs.c_sick_leaves" name="c_sick_leaves"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Annual Leaves</label>
+                                <input min="0" minlength="0" max="30" maxlength="30" type="number" class="form-control" [(ngModel)]="employeer_configs.c_annual_leaves" name="c_annual_leaves"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Bareavement Leaves</label>
+                                <input min="0" minlength="0" max="10" maxlength="10" type="number" class="form-control" [(ngModel)]="employeer_configs.c_bareavement_leaves" name="c_bareavement_leaves"/>
+                            </div>
+                        </div>
+                    
+
+                        <div class="col-md-4">
+                            <h4>KiwiSaver Settings</h4>
+                            <hr />
+
+                            <div class="form-group">
+                                <label>KiwiSaver Member?</label>
+                                <select [(ngModel)]="employeer_configs.kiwisaver_member" name="kiwisaver_member" class="form-control">
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Employer KiwiSaver Contribution (%)</label>
+                                <select [(ngModel)]="employeer_configs.employeer_kiwisaver_contribution" name="employeer_kiwisaver_contribution" class="form-control">
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <h4>Other Settings</h4>
+                            <hr />
+                            
+                            <div class="form-group">
+                                <label>Working Days in Week</label>
+                                <input min="1" minlength="1" max="5" maxlength="5" type="number" class="form-control" [(ngModel)]="employeer_configs.work_day_in_week" name="holidays"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Alow Alternate Holiday?</label>
+                                <select [(ngModel)]="employeer_configs.alternate_holiday" name="alternate_holiday" class="form-control">
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Employer IRD</label>
+                                <input type="text" class="form-control" [(ngModel)]="employeer_configs.employeer_ird" name="employeer_ird"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Pay Rate Type</label>
+                                <select [(ngModel)]="employeer_configs.pay_rate_type" name="pay_rate_type" class="form-control">
+                                    <option value="Hourly">Hourly</option>
+                                    <option value="Daily">Daily</option>
+                                    <option value="Weekly">Weekly</option>
+                                    <option value="Fortnightly">Fortnightly</option>
+                                    <option value="Monthly">Monthly</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <btn (click)="update()"
+                                    type="primary"
+                                    icon="fa fa-save"
+                                    [busy]="false">
+                                        Save
+                                </btn>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+  </div>
+</div>

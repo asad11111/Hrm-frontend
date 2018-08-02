@@ -1,0 +1,84 @@
+<page-header title="Documents"></page-header>
+
+<div class="row" style="padding-top: 20px; padding-right: 20px">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content" style="display: flex">
+                <div style="flex: 1">
+                    <select2 [src]="'/core/api/v1/employees/list'"
+                             [format]="'{first_name} {last_name}'"
+                             [value]="filter.employee_id"
+                             (valueChange)="(filter.employee_id = $event) && fetch()"
+                    >
+                    </select2>
+                </div>
+                <input class="form-control"
+                       style="flex: 4; margin-left: 10px"
+                       placeholder="Search"
+                       (keyup)='keyUp.next($event)'
+                >
+                <button class="btn btn-primary"
+                        style="margin-left: 10px"
+                        (click)="doc= {employee_id: filter.employee_id}"
+                >
+                    <span class="fa fa-upload"></span>
+                    Upload
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins" *ngIf="fetching">
+            <div class="ibox-content">
+                <spinner></spinner>
+            </div>
+        </div>
+        <div class="ibox float-e-margins" *ngIf="fetched && docs.length === 0">
+            <div class="ibox-content">
+                <h2 class="text-center">
+                    No Docs has been uploaded yet.
+                </h2>
+            </div>
+        </div>
+        <div class="file-box" *ngFor="let d of docs">
+            <div class="file">
+                <a>
+                    <span class="corner"></span>
+
+                    <div class="image" *ngIf="d.type === '0'">
+                        <img alt="image" class="img-responsive" [src]="d.file_path">
+                    </div>
+                    <div class="icon" *ngIf="d.type !== '0'">
+                        <i [ngClass]="getFileIcon(d.type)"></i>
+                    </div>
+                    <div class="file-name">
+                        <div class="pull-right mt-5">
+                            <button class="btn btn-xs btn-info btn-outline"
+                                    (click)="previewDoc = d">
+                                <i class="fa fa-eye"></i>
+                            </button>                            
+                            <a [href]="d.file_path" class="btn btn-xs btn-success btn-outline" > <i class="fa fa-download"></i></a>
+                        </div>
+                        {{d.title}}.{{d.extension}}
+                        <br>
+                        <small>Added: {{d.created_at | date: 'mediumDate'}}</small>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<document-preview-modal [doc]="previewDoc"
+                        (onHide)="previewDoc = null"
+                        (onDelete)="onDelete($event)"
+>
+</document-preview-modal>
+
+<document-modal [doc]="doc"
+                (onCancel)="doc = null"
+                (onCreate)="onCreate($event)"
+>
+</document-modal>

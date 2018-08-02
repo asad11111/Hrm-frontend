@@ -1,0 +1,56 @@
+<page-header title="My Reviews"></page-header>  
+<div class="wrapper wrapper-content  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox"> 
+        <div class="ibox-content">
+<div class="row" *ngIf="fetched && data.reviewees.length == 0">
+        <div class="col-sm-12">
+            <div class="box box-solid">
+                <div class="box-body text-center">
+                    <h4>No  one has reviewed you yet</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="fetched && data.reviewees.length != 0">
+        <div class="col-sm-12">
+            <a [routerLink]="[re.id]"
+               class="list-group-item clearfix"
+               *ngFor="let re of data.reviewees"
+               style="margin-top: 15px;"   >
+                <div class="col-sm-3">
+                    <h4>{{data.reviews[re.review_id].title}}</h4>
+                    <h5>Type: {{review_title(re)}}</h5>
+                    <h5>Deadline: {{data.reviews[re.review_id].deadline | date: 'mediumDate' }}</h5>
+                </div>
+                <div class="col-sm-7">
+                    <div *ngFor="let item of filterReviewers(re.id) | groupBy: 'type_id'">
+                        <h5 class="">
+                            <span class="text-bold">
+                                {{data.reviewer_types[item.key].title}}{{ item.value.length > 1 ? 's':'' }}:
+                            </span>
+                            <span *ngFor="let m of item.value; let i = index">
+                                {{ data.employees[m.by_employee_id]?.first_name }}
+                                {{ data.employees[m.by_employee_id]?.last_name }}{{ i+1 < item.value.length ? ',':'' }}
+                            </span>
+                        </h5>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="progress" style="margin-top: 35px; border: 1px solid #CCC">
+                        <div class="progress-bar" [ngStyle]="{width: completedPercentage(re)+'%'}">
+                            {{completedPercentage(re)}} %
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

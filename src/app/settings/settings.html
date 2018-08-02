@@ -1,0 +1,91 @@
+<page-header title="Settings"></page-header>
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+        <div class="col-sm-3">
+        <div class="list-group" style="background: #FFFFFF">
+
+            <a [routerLinkActive]="['active']"
+               [routerLink]="['/settings', 'account']"
+               class="list-group-item">
+                Account
+            </a>
+                <a [routerLinkActive]="['active']"
+                   [routerLink]="['/settings', 'general']"
+                   class="list-group-item"
+                   *ngIf="permission.can('Core.manage_settings')">
+                    General
+                </a>
+                <a [routerLinkActive]="['active']"
+                   [routerLink]="['/settings', 'roles']"
+                   *ngIf="permission.can('Core.manage_settings')"
+                   class="list-group-item">
+                    Permissions
+                </a>
+                <a [routerLinkActive]="['active']"
+                   [routerLink]="['/settings', 'offices']"
+                   *ngIf="permission.can('Core.manage_settings')"
+                   class="list-group-item">
+                    Offices
+                </a>
+                <a [routerLinkActive]="['active']"
+                   [routerLink]="['/settings', 'modules']"
+                   *ngIf="permission.can('Core.manage_settings')"
+                   class="list-group-item">
+                    Modules
+                </a>
+                
+                <a [routerLinkActive]="['active']"
+                   [routerLink]="['/settings', 'payroll']"
+                   *ngIf="auth.hasModule('NZ-Payroll') && permission.can('NZ-Payroll.manage_nz_payroll')"
+                   class="list-group-item">
+                    Payroll
+                </a>
+
+                <a [routerLinkActive]="['active']"
+                   [routerLink]="['/settings', 'taxes']"
+                   *ngIf="permission.can('Core.manage_settings') && auth.hasModule('Payroll')"
+                   class="list-group-item">
+                    Taxes
+                </a>
+                <a [routerLinkActive]="['active']"
+                   [routerLink]="['/settings', 'shifts']"
+                   class="list-group-item"
+                   *ngIf="auth.hasModule('Attendance') && permission.can('Attendance.manage_shifts')">
+                    Shifts
+                </a>
+                <a [routerLinkActive]="['active']"
+                   [routerLink]="['/settings', 'leaves']"
+                   class="list-group-item"
+                   *ngIf="auth.hasModule('Attendance') && permission.can('Attendance.manage_attendance') && !auth.hasModule('NZ-Payroll')">
+                    Leaves
+                </a>
+                <a [routerLinkActive]="['active']"
+                   [routerLink]="['/settings', 'review-scale']"
+                   class="list-group-item"
+                   *ngIf="auth.hasModule('Review')">
+                    Review scale
+                </a>
+                <a [routerLinkActive]="['active']"
+                   [routerLink]="['/settings', 'reviews']" 
+                    class="list-group-item" 
+                   *ngIf="auth.hasModule('Review') && permission.can('Core.manage_settings') ">
+                    Reviews
+                </a>
+                <!-- <a [routerLinkActive]="['active']"
+                    [routerLink]="['/settings', 'email-templates']"
+                    *ngIf="permission.can('Core.manage_settings') "
+                       class="list-group-item">
+                    Email Templates
+                </a> -->
+                <a [routerLinkActive]="['active']" *ngIf="is_manager()"
+                [routerLink]="['/settings', 'notifications']"
+                class="list-group-item" >
+                 Notifications
+                </a>
+        </div>
+        </div>
+        <div class="col-sm-9">
+            <router-outlet></router-outlet>
+    </div>
+    </div>
+</div>

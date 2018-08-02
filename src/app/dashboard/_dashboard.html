@@ -1,0 +1,189 @@
+<div class="content">
+  <div class="row">
+    <div class="col-lg-2 col-xs-6">
+      <div class="small-box bg-aqua">
+        <div class="inner">
+          <h3>{{ stats.totalDepartments }}</h3>
+          <p>Departments</p>
+        </div>
+        <div class="icon"> <i class="fa fa-sitemap"></i> </div>
+        <a routerLink="/departments" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a> </div>
+    </div>
+    <div class="col-lg-2 col-xs-6">
+      <div class="small-box bg-green">
+        <div class="inner">
+          <h3>{{ stats.totalEmployees }}</h3>
+          <p>Total Employees</p>
+        </div>
+        <div class="icon"> <i class="fa fa-users"></i> </div>
+        <a routerLink="/employees" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a> </div>
+    </div>
+    <div class="col-lg-2 col-xs-6">
+      <div class="small-box bg-green" *ngIf="auth.hasModule('Attendance')">
+        <div class="inner">
+          <h3>{{stats.presentEmployees}}</h3>
+          <p>Present Employees</p>
+        </div>
+        <div class="icon"> <i class="fa fa-hand-pointer-o"></i> </div>
+        <a routerLink="/attendance/daily" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>        </div>
+    </div>
+    <div class="col-lg-2 col-xs-6">
+      <div class="small-box bg-red" *ngIf="auth.hasModule('Attendance')">
+        <div class="inner">
+          <h3>{{stats.absentEmployees}}</h3>
+          <p>Absent Employees</p>
+        </div>
+        <div class="icon"> <i class="fa fa-user-times"></i> </div>
+        <a routerLink="/attendance/daily" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>        </div>
+    </div>
+    <div class="col-lg-2 col-xs-6">
+      <div class="small-box bg-blue" *ngIf="auth.hasModule('Review')">
+        <div class="inner">
+          <h3>{{ revstate.assignReviews }}</h3>
+          <p>Assigned Reviews</p>
+        </div>
+        <div class="icon"> <i class="fa  fa-area-chart"></i> </div>
+        <a routerLink="/review/assigned-reviews" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>        </div>
+    </div>
+    <div class="col-lg-2 col-xs-6">
+      <div class="small-box bg-blue" *ngIf="auth.hasModule('Review')">
+        <div class="inner">
+          <h3>{{ revstate.myReviews }}</h3>
+          <p>My Reviews</p>
+        </div>
+        <div class="icon"> <i class="fa fa-bar-chart"></i> </div>
+        <a routerLink="/review/my-reviews" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>        </div>
+    </div>
+  </div>
+  <div class="row">
+    <section class="col-lg-4 connectedSortable">
+      <div class="box box-solid" *ngIf="auth.hasModule('Attendance')">
+        <div class="box-header with-border">
+          <h3 class="box-title">Attendance</h3>
+          <div class="pull-right box-tools">
+            <button type="button" class="btn btn-success btn-sm" data-widget="collapse"><i class="fa fa-minus"></i> </button>
+          </div>
+        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>In</th>
+              <th>Out</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let a of clocks">
+              <td>{{ a.in_at | local | date: 'short' }}</td>
+              <td>{{ a.out_at | local | date: 'short' }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="box-body">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="pull-right">
+                <btn type="success" *ngIf="canClockIn()" (click)="clockIn()" icon="fa fa-sign-in" [busy]="clocking">
+                  Clock In
+                </btn>
+                <btn type="danger" *ngIf="!canClockIn()" (click)="clockOut()" icon="fa fa-sign-out" [busy]="clocking">
+                  Clock Out
+                </btn>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <pending-leaves></pending-leaves>
+      <div class="box box-success" *ngIf="auth.hasModule('Review')">
+        <div class="box-header"> <i class="fa fa-star"></i>
+          <h3 class="box-title">Overall review score</h3>
+          <!-- tools box -->
+          <div class="pull-right box-tools">
+            <!-- button with a dropdown -->
+            <button type="button" class="btn btn-success btn-sm" data-widget="collapse"><i class="fa fa-minus"></i> </button>
+          </div>
+          <!-- /. tools -->
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body no-padding">
+          <div class="small-box bg-green">
+            <div class="inner">
+              <h3>{{ revstate.overAllScore }}</h3>
+              <p>Reviews score</p>
+            </div>
+            <div class="icon"> <i class="fa  fa-star"></i> </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="col-sm-8">
+      <div class="box box-solid">
+        <div #calendar></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-8">
+    <div class="box box-solid">
+      <div #calendar></div>
+    </div>
+  </div>
+</div>
+<!-- Start attendance chart  -->
+<div class="row" *ngIf="auth.hasModule('Attendance')">
+  <div class="col-sm-6">
+    <div class="box box-primary">
+      <div class="box-header"> <i class="fa fa-area-chart"></i>
+        <h3 class="box-title"><strong>Employee</strong> last week percentage attendance</h3>
+        <!-- tools box -->
+        <div class="pull-right box-tools">
+          <!-- button with a dropdown -->
+          <button type="button" class="btn btn-success btn-sm" data-widget="collapse"><i class="fa fa-minus"></i> </button>
+        </div>
+        <!-- /. tools -->
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body no-padding">
+        <div id="weekly_attendance" style="height: 250px;width: 100%"></div>
+</div>
+</div>
+</div>
+
+<div class="col-sm-6">
+  <div class="box box-primary">
+    <div class="box-header"> <i class="fa fa-area-chart"></i>
+      <h3 class="box-title"><strong>Employee</strong> last month percentage attendance</h3>
+      <!-- tools box -->
+      <div class="pull-right box-tools">
+        <!-- button with a dropdown -->
+        <button type="button" class="btn btn-success btn-sm" data-widget="collapse"><i class="fa fa-minus"></i> </button>
+      </div>
+      <!-- /. tools -->
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body no-padding">
+      <div id="last_month_attendance" style="height: 250px;width: 100%;"></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="row" *ngIf="auth.hasModule('Attendance')">
+  <div class="col-sm-12">
+    <div class="box box-primary">
+      <div class="box-header"> <i class="fa fa-area-chart"></i>
+        <h3 class="box-title"><strong>Employee</strong> monthly attendance</h3>
+        <!-- tools box -->
+        <div class="pull-right box-tools">
+          <!-- button with a dropdown -->
+          <button type="button" class="btn btn-success btn-sm" data-widget="collapse"><i class="fa fa-minus"></i> </button>
+        </div>
+        <!-- /. tools -->
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body no-padding">
+
+        <div id="per_month_attendance" style="height: 250px;"></div>
+</div>
+</div>
+</div>
+</div>

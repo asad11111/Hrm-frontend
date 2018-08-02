@@ -1,0 +1,13 @@
+#employee-salaries {
+
+}
+#employee-salaries .panel-closed.panel:hover .panel-heading {
+    background-color: #1C84C5;
+    color: #ffffff;
+}
+#employee-salaries .panel-closed.panel:hover {
+    border-color: #1c84c6;
+}
+#employee-salaries .panel .panel-heading {
+    cursor: pointer;
+}

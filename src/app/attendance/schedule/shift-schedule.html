@@ -1,0 +1,77 @@
+<page-header title="Shifts Schedule"></page-header>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <box>
+                <div header>
+                    <button class="btn btn-primary btn-xs pull-right"
+                            (click)="employeeShift = {employee_id: employee_id}">
+                        <i class="fa fa-plus"></i> Assign Shift
+                    </button>
+                    <h3>Duties</h3>
+                </div>
+                <div class="ibox-content" body>
+                    <div class="form-group">
+                        <label class="control-label col-sm-1">Employees</label>
+                        <div class="col-sm-3">
+                            <select2 [src]="'/core/api/v1/employees/list'"
+                                     [(value)]="employee_id"
+                                     (valueChange)="fetch()"
+                                     [format]="'{first_name} {last_name}'">
+                            </select2>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h2 class="text-center" *ngIf="fetched && employeeShifts.length === 0">
+                                No Shifts has been assigned.
+                            </h2>
+                            <spinner *ngIf="fetching"></spinner>
+                            <div class="table table-responsive" *ngIf="fetched && !fetching && employeeShifts.length !== 0">
+                                <table class="table table-stripped">
+                                    <thead>
+                                    <tr>
+                                        <th>Shift</th>
+                                        <th>Started On</th>
+                                        <th>Ended On</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr *ngFor="let es of employeeShifts">
+                                        <td>{{ shifts[es.shift_id].name }}</td>
+                                        <td>{{ es.started_on | date: 'mediumDate' }}</td>
+                                        <td>{{ es.ended_on | date: 'mediumDate' }}</td>
+                                        <td>
+                                            <button class="btn btn-default btn-xs"
+                                                    (click)="employeeShift = es">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-danger btn-xs"
+                                                    (click)="destroy(es)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </box>
+        </div>
+    </div>
+</div>
+
+<assign-shift-modal [employees]="employees"
+                    [shifts]="shifts"
+                    [shift]="employeeShift"
+                    (onHide)="employeeShift = null"
+                    (onAssign)="onAssign($event)"
+>
+</assign-shift-modal>
+
+<confirm #confirm></confirm>

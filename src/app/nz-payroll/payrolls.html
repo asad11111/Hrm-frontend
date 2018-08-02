@@ -1,0 +1,84 @@
+<page-header title="Payrolls"></page-header>
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <box [busy]="payrolls.fetching">
+                <div header>
+                    <button class="btn btn-primary btn-xs pull-right"
+                            (click)="payroll = {}">
+                        <i class="fa fa-plus"></i> Create Payroll
+                    </button>
+                    <h3 class="box-title">Payrolls
+                    </h3>
+                </div>
+                <div class="ibox-content" body>
+                    <h2 *ngIf="payrolls.fetched && payrolls.data.length === 0" class="text-center">
+                        No Payrolls has been created yet.
+                    </h2>
+                    <table class="table table-stripped" *ngIf="payrolls.fetched && payrolls.data.length > 0">
+                        <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>From</th>
+                            <th>Till</th>
+                            <th>Created On</th>
+
+                            <th>Total Gross Pay</th>
+                            <th>Total Deductions</th>
+                            <th>Total Net Pay</th>
+
+
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let p of payrolls.data">
+                            <td>
+                                <a [routerLink]="['/', 'nz-payroll', p.id , 'slips']">
+                                    {{p.title}}
+                                </a>
+                            </td>
+                            <td>
+                                {{ p.start_date | date: 'mediumDate'}}
+                            </td>
+                            <td>
+                                {{ p.end_date | date: 'mediumDate'}}
+                            </td>
+                            <td>
+                                {{p.created_on | date: 'mediumDate'}}
+                            </td>
+
+                            <td>{{p.total_grosspay}}</td>
+                            <td>{{p.total_deduction}}</td>
+                            <td>{{p.total_employees_net_pay}}</td>
+
+
+                            <td>
+                                <button class="btn btn-xs btn-danger" (click)="destroy(p)">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                                <a class="btn btn-xs btn-primary"
+                                   download
+                                   [href]="'nz-payroll/api/v1/payrolls/' + p.id + '/download' | tokened">
+                                    <i class="fa fa-download"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </box>
+        </div>
+    </div>
+</div>
+
+<create-payroll [payroll]="payroll"
+                (onHide)="payroll = null"
+                (onCreate)="onCreate($event)"
+>
+</create-payroll>
+
+<confirm #confirm>
+
+</confirm>

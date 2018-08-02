@@ -1,0 +1,87 @@
+<div class="panel panel-success">
+  <div class="panel-heading">Email Templates
+    <button class="btn btn-primary btn-xs pull-right"  (click)="openPopup()" > Create Template </button></div>
+  <div class="panel-body">
+
+
+    
+    <table class="table table-bordered configurations">
+      <thead>
+        <tr>
+          <th>Module</th>
+          <th>Title</th>
+          <th>Details</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let e of email_templates;let i=index;">
+          <td>{{e.modulename}}</td>
+          <td>{{e.title}}</td>
+          <td>{{e.template_format}}</td>
+          <td>
+            <button (click)="edit(e)" class="btn btn-xs btn-primary" ><i class="fa fa-edit" ></i></button>
+            <button (click)="del(e)" class="btn btn-xs btn-danger" ><i class="fa fa-trash" ></i></button>
+          </td>           
+        </tr>
+      </tbody>
+    </table>
+
+
+
+  </div> 
+</div>
+
+
+<!-- /.Add categories ........ -->
+<div bsModal class="modal fade" #create_template_form="bs-modal"   [config]="{backdrop: false}" id="create_template_form">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" (click)="create_template_form.hide()" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Email Template</h4>
+			</div>
+			<div class="modal-body">				 
+        <errors [errors]="errors" ></errors>
+        <form id="category_form_inputs" method="POST" >
+        <div class="form-group">
+					<label>Module</label>
+          <select class="form-control" name="module_id" [(ngModel)]="emaiTemplate.module_id" >
+            <option [value]="1"  >Core</option>
+            <option [value]="2"  >Attendance (Leave,Attendance)</option>
+            <option [value]="3"  >Review</option>
+          </select>
+				</div>
+				<div class="form-group">
+					<label>Template title</label>
+          <input [(ngModel)]="emaiTemplate.title"  placeholder="Email template title" class="form-control" id="title" name="title"   >
+				</div>
+        <div class="form-group">
+					<label class="" >Template format</label>
+          <textarea [(ngModel)]="emaiTemplate.template_format" rows="6" class="form-control"  placeholder="Email template body" id="template_format" name="template_format" ></textarea> 
+				</div>
+        <div class="form-group">
+					<label class="" >Status</label>
+          <select class="form-control" name="status" [(ngModel)]="emaiTemplate.status" >
+            <option [value]="1"  >Active</option>
+            <option [value]="0"  >Disabled</option> 
+          </select> 
+				</div>
+        
+        </form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" (click)="saveEmailTemplate()" class="btn btn-primary">{{btn}}</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+
+<confirm #confirmreviewer></confirm>
+<alert #alertpoup></alert>

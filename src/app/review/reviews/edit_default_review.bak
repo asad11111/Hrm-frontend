@@ -1,0 +1,608 @@
+import { Component, Input, ViewChild } from '@angular/core';
+import { Http } from "@angular/http";
+import { ModalDirective } from 'ng2-bootstrap/modal';
+import { Confirm } from "../../shared/components/confirm";
+import { Alert } from "../../shared/components/alert";
+import { ToastsManager } from "ng2-toastr";
+import { ActivatedRoute } from "@angular/router";
+
+interface ReviewType {
+    id?: number;
+    company_id?: number;
+    title?: string;
+    description?: string;
+    status?: number;
+    priority?: number;
+}
+
+interface Review {
+    id?: number;
+    company_id?: number;
+    office_id?: number;
+    title?: string;
+    for_employee_id?: number;
+    type_id?: number;
+    template_id?: number;
+    description?: string;
+    rating?: number;
+    weighted_rating?: number;
+    status?: number;
+    deadline?: string;
+    review_session_id?: number;
+    review_edit_count?: number;
+    starting_date?: string;
+
+    peers?: any;
+    managers?: any;
+}
+
+@Component({
+    selector: 'edit-reviews',
+    templateUrl: './edit-reviews.html',
+    // styleUrls:['./']
+})
+export class EditReviews {
+
+    @ViewChild('review_types_form') public review_types_form: ModalDirective;
+    @ViewChild('view_review_details') public view_review_details: ModalDirective;
+    @ViewChild('select_employee_form') public select_employee_form: ModalDirective;
+    @ViewChild('confirmreviewer') confirm: Confirm;
+    @ViewChild('alertpoup') alertpoup: Alert;
+
+    public review: Review = { status: 1 };
+    public reviewtype: ReviewType = { status: 1 };
+    public review_template: any = [];
+    public period_type: any;
+    public review_type_btn: any = " save review type ";
+    public selected_department_id: number = 0;
+    public departments: any = [];
+    public dep_employees: any = [];
+    public dep_employees_more: any;
+    public for_emp_template_id: number = 0;
+    public selected_for_employee_id: number = 0;
+    public current_employee_name: string = '';
+    public selected_review_template: any = {};
+
+    public saved_reviewers: Array<any> = [];
+    public saved_temp_reviewers: Array<any> = [];
+    public reviews: Array<any> = [];
+
+    public peer_employees: any = [];
+    public managers_employees: any = [];
+    public employee_cat_id: number = 1;
+
+    protected selected_review_id: number = 0;
+    protected errors = {};
+    public review_btn = " Update Review ";
+
+    public saved_reviewers_list: Array<any> = [];
+
+    public desig_based_template: any = [];
+
+
+    constructor(protected http: Http, protected toastr: ToastsManager, private activatedRoute: ActivatedRoute) {
+        this.activatedRoute.params.subscribe((param: any) => {
+            this.selected_review_id = param['id'];
+            this.load_review(param['id']);
+        });
+
+    }
+
+    //****************************************************
+    load_review(id) {
+        var target = "/review/api/v1/reviews/" + id;
+        var peer_employees = this.peer_employees;
+        this.http.get(target).subscribe((res) => {
+            this.review = res.json().data;
+            this.saved_temp_reviewers = res.json().data.reviewees;
+        }, (res) => {
+            if (res.status != 422) return;
+            this.errors = res.json().errors;
+        });
+    }
+    //****************************************************
+    select_review_template_default(id) {
+        var templates = this.review_template;
+        for (var i = 0; i < templates.length; i++) {
+            if (id == templates[i].id)
+                this.selected_review_template = templates[i];
+        }
+    }
+
+    reload_templates() {
+        this.http.get("/review/api/v1/reviews-templates").subscribe((res) => {
+            this.review_template = res.json().data;
+        }, (res) => {
+            if (res.status != 422) return;
+            this.review_btn = 'Save review';
+            this.errors = res.json().errors;
+        });
+    }
+
+
+
+
+    ngOnInit() {
+
+        this.load_desigBasedTemplates();
+        this.http.get("/review/api/v1/reviews-templates").subscribe((res) => {
+            this.review_template = res.json().data;
+        }, (res) => {
+            if (res.status != 422) return;
+            this.review_btn = 'Save review';
+            this.errors = res.json().errors;
+        });
+
+        this.http.get("/core/api/v1/departments").subscribe((res) => {
+            this.departments = res.json().data;
+        }, (res) => {
+            if (res.status != 422) return;
+            this.errors = res.json().errors;
+        });
+        this.load_period_type();
+    }
+
+
+    load_desigBasedTemplates() {
+
+        this.http.get("/core/api/v1/designations?per_page=100").subscribe((res) => {
+            this.desig_based_template = res.json().data;
+        }, (res) => {
+            if (res.status != 422) return;
+            this.review_btn = 'Save review';
+            this.errors = res.json().errors;
+        });
+    }
+
+    load_period_type() {
+        this.http.get("/review/api/v1/reviews-types").subscribe((res) => {
+            this.period_type = res.json().data;
+        }, (res) => {
+            if (res.status != 422) return;
+            this.review_btn = 'Save review';
+            this.errors = res.json().errors;
+        });
+    }
+
+    open_review_type() {
+        this.review_types_form.show();
+    }
+
+    save_review_types() {
+        this.review_type_btn = 'Processing...';
+        var target_url = '/review/api/v1/reviews-type';
+
+        this.http.post(target_url, this.reviewtype).subscribe((res) => {
+            this.review_type_btn = ' save review type ';
+            this.load_period_type();
+            this.review_types_form.hide();
+            this.toastr.success(`Review type saved successfully.`, 'Review');
+        }, (res) => {
+            if (res.status != 422) return;
+            this.review_type_btn = ' save review type ';
+            this.errors = res.json().errors;
+        });
+    }
+
+    save_review(status = 0) {
+
+        var review = this.review;
+        var reviews = [];
+        var selected_reviewer = this.saved_temp_reviewers;
+        var http = this.http;
+        var view_review_details = this.view_review_details;
+        var toastr = this.toastr;
+
+        selected_reviewer.forEach(function (value, index) {
+            var r = {
+                for_employee_id: value.id,
+                template_id: value.template_id,
+                status: 1,
+                peers: [],
+                managers: []
+            };
+
+            var peers = value.peers;
+            var managers = value.managers;
+            if (managers.length > 0 || peers.length > 0) {
+
+                r.for_employee_id = value.id;
+                var temp = [];
+                for (var m = 0; m < managers.length; m++)
+                    temp.push(managers[m].id);
+                r.managers = temp;
+                var temp = [];
+                for (var m = 0; m < peers.length; m++)
+                    temp.push(peers[m].id);
+                r.peers = temp;
+
+                if (value.for_emp_template_id > 0)
+                    r.template_id = value.for_emp_template_id;
+
+                if (status > 1)
+                    r.status = status;
+                reviews.push(r);
+            }
+
+        });
+
+        var send_data = {
+            title: review.title,
+            type_id: review.type_id,
+            description: review.description,
+            status: review.status,
+            deadline: review.deadline,
+            starting_date: review.starting_date,
+            reviewee: reviews
+        };
+
+        if (reviews.length == 0)
+            this.alertpoup.show(`Please choose employee for review and there peers and managers.`);
+        else {
+
+            this.review_btn = 'Processing...';
+            var target_url = '/review/api/v1/reviews/' + this.selected_review_id + '/update';
+            http.post(target_url, send_data).subscribe((res) => {
+                this.review_btn = ' Update Review';
+                toastr.success(`Review saved successfully.`, 'Review');
+                this.load_review(this.selected_review_id);
+                view_review_details.hide();
+            }, (res) => {
+                if (res.status != 422) return;
+                this.review_btn = ' Update Review';
+                this.displayEerrors(res.json().errors);
+            });
+        }
+
+    } //save_review
+
+
+    displayEerrors = (errors) => {
+
+        var message = [];
+        for (var i in errors) {
+            var temp = [];
+            if (errors[i].length > 0) {
+                temp = errors[i];
+                for (var k = 0; k < temp.length; k++)
+                    this.toastr.error(temp[k], i);
+            }
+        }
+    }
+
+    load_employees(id) {
+
+        if (typeof this.review.template_id == 'undefined' || this.review.template_id == 0) {
+            this.toastr.error('Review template required before employee load.');
+            return false;
+        }
+
+        var target_url = '/core/api/v1/departments/' + id + '/employees';
+        this.selected_department_id = id;
+        this.http.get(target_url).subscribe((res) => {
+            var emps = res.json().data
+            var desig = emps.designations;
+
+            emps.employees.forEach(function (value, index) {
+                value.designation = desig[value.designation_id].name;
+                emps.employees[index] = value;
+            });
+            this.dep_employees = emps.employees;
+
+        }, (res) => {
+            if (res.status != 422) return;
+            this.errors = res.json().errors;
+        });
+
+    }//load_employees
+
+    load_employees_more(id = 0) {
+        //core/api/v1/departments/1/employees
+        var target_url = '/core/api/v1/departments/' + id + '/employees';
+        this.selected_department_id = id;
+        this.http.get(target_url).subscribe((res) => {
+
+            var emps = res.json().data;
+            var desig = emps.designations;
+            emps.employees.forEach(function (value, index) {
+                value.designation = desig[value.designation_id].name;
+                emps.employees[index] = value;
+            });
+            this.dep_employees_more = emps.employees;
+
+        }, (res) => {
+            if (res.status != 422) return;
+            this.errors = res.json().errors;
+        });
+
+    }//load_employees
+
+    select_peers = (peer) => {
+        this.save_add_employee(peer, 2);
+    }
+
+    select_mngr = (manager) => {
+        this.save_add_employee(manager, 3);
+    }
+
+    check_for_desig_based_template = (employee) => {
+        var templates = this.review_template;
+        var des_id = employee.designation_id;
+        var sel_template: any = false;
+
+        templates.forEach((value, index) => {
+            var designations = value.designations;
+            for (var i = 0; i < designations.length; i++)
+                if (designations[i] == des_id)
+                    sel_template = value;
+        });
+
+        return sel_template;
+    }
+
+    load_manager_peers = (e_input, employee) => {
+        var emp = $(e_input);
+        var id = $(".department_id_sel").val();
+
+        var dasig_based_template = this.check_for_desig_based_template(employee);
+        if (this.review.template_id == 9999999 && dasig_based_template == false) {
+            emp.prop("checked", false);
+            this.toastr.error(`Please select Review template for designation ${employee.designation}`);
+            return false;
+        }
+
+        if (emp.is(':checked')) {
+            if (typeof employee.peers == 'undefined')
+                employee.peers = [];
+            if (typeof employee.managers == 'undefined')
+                employee.managers = [];
+
+            this.selected_for_employee_id = employee.id;
+            this.current_employee_name = employee;
+
+            var saved_temp_reviewers = this.saved_temp_reviewers;
+            this.for_emp_template_id = 0;
+
+            if (this.check_existemp(saved_temp_reviewers, employee.id) == false) {
+                if (this.review.template_id == 9999999 && dasig_based_template != false) {
+                    employee.for_emp_template_id = dasig_based_template.id;
+                    employee.review_template = dasig_based_template;
+                } else {
+                    employee.for_emp_template_id = this.selected_review_template.id;
+                    employee.review_template = this.selected_review_template;
+                }
+                saved_temp_reviewers.push(employee);
+            }
+
+            var target_url = '/core/api/v1/departments/' + id + '/employees';
+            this.selected_department_id = id;
+            this.http.get(target_url).subscribe((res) => {
+
+                var emps = res.json().data;
+                var desig = emps.designations;
+                emps.employees.forEach(function (value, index) {
+                    value.designation = desig[value.designation_id].name;
+                    emps.employees[index] = value;
+                });
+                this.peer_employees = emps.employees;
+
+            }, (res) => {
+                if (res.status != 422) return;
+                this.errors = res.json().errors;
+            });
+
+            var target_url = '/core/api/v1/employees/' + employee.id + '/manager';
+            this.http.get(target_url).subscribe((res) => {
+                var data = res.json().data;
+
+                if (data.manager.id > 0) {
+                    var emps = data.manager;
+                    emps.designation = data.designation.name;
+                    this.managers_employees = [emps];
+                }
+                else
+                    this.managers_employees = [];
+            }, (res) => {
+                if (res.status != 422) return;
+                this.errors = res.json().errors;
+            });
+        }
+    }
+
+    show_ad_more_employee(type) {
+        this.employee_cat_id = type;
+        this.select_employee_form.show();
+    }
+    // 1 employee
+    // 2 peers
+    // 3 managers
+    check_existemp(ext_arr, id) {
+        var emp_exist = false;
+        for (var n = 0; n < ext_arr.length; n++) {
+            if (ext_arr[n].id == id)
+                emp_exist = true;
+        }
+        return emp_exist;
+    }
+    check_exist_peers_mngr = (type, id) => {
+        var status = false;
+        var saved_temp_reviewers = this.saved_temp_reviewers;
+        var emp_id = this.selected_for_employee_id;
+        saved_temp_reviewers.forEach(function (value, index) {
+            if (value.id == emp_id) {
+                switch (type) {
+                    case 2:
+                        var peers = value.peers;
+                        for (var i = 0; i < peers.length; i++)
+                            if (peers[i].id == id)
+                                status = true;
+                        break;
+                    case 3:
+                        var managers = value.managers;
+                        for (var i = 0; i < managers.length; i++)
+                            if (managers[i].id == id)
+                                status = true;
+                        break;
+                }
+            }
+        });
+        return status;
+    }
+
+    save_more_reviewer = (emp) => {
+        var saved_temp_reviewers = this.saved_temp_reviewers;
+        switch (this.employee_cat_id) {
+            case 3:
+                if (this.check_existemp(this.managers_employees, emp.id) == false)
+                    this.managers_employees.push(emp);
+                this.save_add_employee(emp, 3);
+                break;
+            case 2:
+                if (this.check_existemp(this.peer_employees, emp.id) == false)
+                    this.peer_employees.push(emp);
+                this.save_add_employee(emp, 2);
+                break;
+        }
+
+    }
+
+    remove_reviewer = (employee, reviewer, type) => {
+
+
+        var net_reviewer = 0;
+        this.confirm.show(`Are you sure you want to remove "${reviewer.first_name}  ${reviewer.last_name}" `).then((opt) => {
+            if (opt === false) return;
+
+            var reviewers_list = this.saved_temp_reviewers;
+
+            for (var k = 0; k < reviewers_list.length; k++)
+                if (reviewers_list[k].id == employee.id) {
+                    net_reviewer = parseInt(reviewers_list[k].peers.length) + parseInt(reviewers_list[k].managers.length);
+                }
+
+            if (net_reviewer < 2 && type != 1) {
+                this.toastr.error('Minimum one reviewer is required.')
+                return;
+            }
+
+            //.......... DB Check .................
+            var target_url = '/review/api/v1/reviews/' + this.selected_review_id + '/reviewee/' + reviewer.reviewee_id + "/reviewer/" + reviewer.id;
+
+            if (type == 1)
+                target_url = '/review/api/v1/reviews/' + this.selected_review_id + '/reviewee/' + employee.id + "/remove";
+
+            this.http.delete(target_url).subscribe((res) => {
+                var data = res.json().data;
+                this.toastr.success(`${reviewer.first_name} ${reviewer.last_name} removed successfully.`);
+                //.......................... Switch cases ......               
+
+                switch (type) {
+                    case 1:
+                        for (var k = 0; k < reviewers_list.length; k++)
+                            if (reviewers_list[k].id == employee.id)
+                                reviewers_list.splice(k, 1);
+                        break;
+                    case 2:
+                        reviewers_list.forEach(function (value, index) {
+                            if (value.id == employee.id) {
+                                var peers = reviewers_list[index].peers;
+                                for (var k = 0; k < peers.length; k++) {
+                                    if (peers[k].id == reviewer.id)
+                                        peers.splice(k, 1);
+                                }
+                            }
+                        });
+                        break;
+                    case 3:
+                        reviewers_list.forEach(function (value, index) {
+                            if (value.id == employee.id) {
+                                var managers = reviewers_list[index].managers;
+                                for (var k = 0; k < managers.length; k++) {
+                                    if (managers[k].id == reviewer.id)
+                                        managers.splice(k, 1);
+                                }
+                            }
+                        });
+                        break;
+                } // switch ...
+
+                //.......................... End Switch cases......
+
+            }, (res) => {
+                if (res.status != 422) return;
+                this.displayEerrors(res.json().errors);
+            })
+
+
+
+        });
+    }
+
+    select_all_emp = (type) => {
+
+        var all_peers = this.peer_employees;
+        var all_managers = this.managers_employees;
+        switch (type) {
+            case 2:
+                for (var i = 0; i < all_peers.length; i++)
+                    this.save_add_employee(all_peers[i], 2);
+                break;
+            case 3:
+                for (var i = 0; i < all_managers.length; i++)
+                    this.save_add_employee(all_managers[i], 3);
+                break;
+        }
+    }
+
+    select_review_template(target_value) {
+        var current_emp_id = this.selected_for_employee_id;
+        var current_template_id = $(target_value).val();
+        var selected_reviewee = this.saved_temp_reviewers;
+        var templates = this.review_template;
+
+        selected_reviewee.forEach(function (value, index) {
+            if (selected_reviewee[index].id == current_emp_id) {
+                if (current_template_id == 0) {
+                    selected_reviewee[index].for_emp_template_id = current_template_id;
+                    selected_reviewee[index].review_template = {};
+                } else
+                    for (var i = 0; i < templates.length; i++) {
+                        if (templates[i].id == current_template_id) {
+                            selected_reviewee[index].for_emp_template_id = current_template_id;
+                            selected_reviewee[index].review_template = templates[i];
+                        }
+                    }
+            }
+        });
+        this.saved_temp_reviewers = selected_reviewee;
+        return true;
+    }
+    save_add_employee = (employee, type) => {
+        var saved_temp_reviewers = this.saved_temp_reviewers;
+        var all_peers = this.peer_employees;
+        var all_managers = this.managers_employees;
+        var emp_id = this.selected_for_employee_id;
+        var this_obj = this;
+        switch (type) {
+            case 1:// add employee for review
+
+                break;
+            case 2:// add employee for peers
+                saved_temp_reviewers.forEach(function (value, index) {
+                    if (value.id == emp_id) {
+                        if (this_obj.check_existemp(value.peers, employee.id) == false)
+                            saved_temp_reviewers[index].peers.push(employee);
+                    }
+                });
+                break;
+            case 3:// add employee for managers
+                saved_temp_reviewers.forEach(function (value, index) {
+                    if (value.id == emp_id) {
+                        if (this_obj.check_existemp(value.managers, employee.id) == false)
+                            saved_temp_reviewers[index].managers.push(employee);
+                    }
+                });
+                break;
+        }
+    }
+}

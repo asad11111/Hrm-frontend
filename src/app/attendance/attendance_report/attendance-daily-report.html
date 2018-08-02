@@ -1,0 +1,94 @@
+<div class="row">
+    <div class="col-lg-3">
+        <div class="form-group has-feedback">
+            <label>Search</label>
+            <input class="form-control"
+                   [value]="search"
+                   (keyup)="onSearch.next($event.target.value)"
+                   placeholder="Employee">
+            <span class="glyphicon glyphicon-remove-circle form-control-feedback"
+                  *ngIf="search !== ''"
+                  (click)="onSearch.next('')">
+            </span>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="form-group">
+            <label>Date</label>
+            <div style="display: flex;">
+                <datepicker [(value)]="date" (valueChange)="fetch()"></datepicker>
+                <button class="btn btn-primary"
+                        (click)="fetch()"
+                        style="margin-left: 10px"
+                        [disabled]="!(date)">
+                    <i class="fa fa-refresh"></i>
+                </button>
+                <button class="btn btn-success"
+                        style="margin-left: 10px"
+                        (click)="toCsv()"
+                        [disabled]="!fetching.completed"
+                ><i class="fa fa-file-excel-o"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <spinner *ngIf="fetching.inProgress"></spinner>
+        <div class="table table-responsive" *ngIf="fetching.completed">
+            <table class="table table-bordered td-center text-center" #table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>In Time</th>
+                    <!--<th>Late/Early Coming</th>-->
+                    <th>Out Time</th>
+                    <!--<th>Late/Early Going</th>-->
+                    <th>Total Duration</th>
+                    <th>Worked Duration</th>
+                    <th>Over Time</th>
+                    <!--<th>TPI (%)</th>-->
+                    <!--<th>PE (%)</th>-->
+                    <th>Status</th>
+                    <th>Shift</th>
+                </tr>
+                </thead>
+                <tbody>
+                <ng-container *ngFor="let e of data.employees.data">
+                        <tr *ngIf="!data.reports[e.id]">
+                            <td>
+                                    <div title="ex-employee"  [class]="empStatus(e)" ></div>
+                                {{e.first_name}} {{e.last_name}}</td>
+                            <td colspan="10">No data found</td>
+                        </tr>
+                        <tr *ngFor="let r of data.reports[e.id] ; let i = index;">
+
+                            <td *ngIf="i == 0" [attr.rowspan]="data.reports[e.id].length">
+                                    <div title="ex-employee"  [class]="empStatus(e)" ></div> {{e.first_name}} {{e.last_name}}</td>
+                            <td>{{r.in_at | local | date: 'shortTime'}}</td>
+                            <td>{{r.out_at | local | date: 'shortTime'}}</td>
+                            <td>{{toHours(r.shift_duration,'m')}}</td>
+                            <td>{{toHours(r.worked_minutes,'m')}} </td>
+                            <td *ngIf="i == 0" [attr.rowspan]="data.reports[e.id].length"> {{overTime(r)}}</td>
+                           
+                            <td>
+                                <div [ngClass]="['label', getLabel(r)]">
+                                    {{getStatus(r)}}
+                                </div>
+                            </td>
+                            <td>{{r.shift}}</td>
+                        </tr>
+                </ng-container>
+                </tbody>
+            </table>
+            <pagination class="pull-right"
+                        [perPage]="data.employees.per_page"
+                        [items]="data.employees.total"
+                        [page]="data.employees.current_page"
+                        (pageChange)="fetch($event)"
+            >
+            </pagination>
+        </div>
+    </div>
+</div>

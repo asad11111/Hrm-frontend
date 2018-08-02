@@ -1,0 +1,106 @@
+<aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel">
+            <div class="pull-left image">
+                <img [src]="getEmployeePicPath()" class="img-circle" alt="User Image">
+            </div>
+            <div class="pull-left info">
+                <p>{{auth.data.employee.first_name}} sss {{auth.data.employee.last_name}}</p>
+                <!-- Status -->
+                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+            </div>
+        </div>
+
+        <!-- search form (Optional) -->
+        <form action="#" method="get" class="sidebar-form">
+            <div class="input-group">
+                 
+                <span class="input-group-btn">
+                
+              </span>
+            </div>
+        </form>
+        <ul class="sidebar-menu">
+            <li routerLinkActive="active" class="treeview" *ngIf="permission.can('view_departments')">
+                <a routerLink="/departments"><i class="fa fa-building-o"></i> <span>Departments</span>
+                    <span class="pull-right-container"></span>
+                </a>
+            </li>
+
+            <li routerLinkActive="active" class="treeview" *ngIf="permission.can('view_departments')">
+                <a routerLink="/departments/organization"><i class="fa fa-building-o"></i> <span>Organization</span>
+                    <span class="pull-right-container"></span>
+                </a>
+            </li>
+
+             <li routerLinkActive="active" class="treeview" *ngIf="permission.can('view_designations')">
+                <a routerLink="/designations">
+                    <i class="fa fa-tree"></i> <span>Designations</span>
+                </a>
+            </li>
+             <li routerLinkActive="active" class="treeview" *ngIf="permission.can('view_employees')">
+                <a routerLink="/employees"><i class="fa fa-user"></i> <span>Employees</span></a>
+            </li>
+            <li class="treeview" *ngIf="auth.hasModule('Attendance')">
+                <a href=""><i class="fa fa-calendar"></i> <span>Attendance</span>
+                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu">
+                    <li *ngIf="permission.can('view_attendance')">
+                        <a routerLink="/attendance/daily">Daily Attendance</a>
+                    </li>
+                    <li *ngIf="permission.can('view_self_attendance')">
+                        <a routerLink="/attendance/monthly">Monthly Attendance</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="treeview" *ngIf="auth.hasModule('Attendance')">
+                <a href=""><i class="fa fa-link"></i> <span>Leaves</span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a routerLink="/leaves">My Leaves</a>
+                    </li>
+                    <li>
+                        <a routerLink="/leaves/submitted">Submitted Leaves</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="treeview" *ngIf="auth.hasModule('Review')">
+                <a href=""><i class="fa fa-link"></i> <span>Review</span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu">   
+                    <li>
+                        <a routerLink="/review/assigned-reviews">Assigned Reviews</a>
+                    </li>
+                    <li>
+                        <a routerLink="/review/my-reviews">My Reviews</a>
+                    </li>
+                    <li>
+                        <a routerLink="/review/team">Team Reviews</a>
+                    </li>                    
+                    <li *ngIf="permission.can('view_reviews')">
+                        <a routerLink="/review/reviews/reviews-list">Reviews</a>
+                    </li>  
+
+                    <li *ngIf="permission.can('view_review_template')">
+                        <a routerLink="/review/reviews">Review templates</a>
+                    </li>
+                    <li *ngIf="permission.can('view_questions_categories')">
+                        <a routerLink="/review/reviews/categories">Questions Categories</a>
+                    </li>            
+                </ul>
+            </li>
+    <li class="treeview">
+        <a routerLink="/holidays" *ngIf="auth.hasModule('Attendance')">
+        <i class="fa fa-fighter-jet"></i>
+        <span>Holidays</span> <span class="pull-right-container"></span> </a>
+    </li>
+        </ul>
+    </section>
+</aside>

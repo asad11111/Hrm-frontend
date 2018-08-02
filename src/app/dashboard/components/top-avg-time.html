@@ -1,0 +1,28 @@
+<div class="ibox">
+
+    <div class="ibox-title">
+        <h5>Average Clock In/Out</h5>
+        <div class="pull-right">
+        </div>
+    </div>
+
+    <div style="background: #FFF">
+
+        <table class="table table-bordered td-center">
+            <tr *ngFor="let e of data?.employees">
+                <td>
+                    <img [src]="getEmployeeImage(e.image_id)" alt="" class="img-circle user-img-xs">
+                    <span>{{e.first_name}} {{e.last_name}}</span>
+                </td>
+                <td>
+                    <span class="sprite sprite-clock-in-at v-middle"></span>
+                    <span class="v-middle">{{ data.avgClocks.inRecords[e.id] | local | date: 'shortTime'}}</span>
+                </td>
+                <td>
+                    <span class="sprite sprite-clock-in-late v-middle"></span>
+                    <span class="v-middle">{{ data.avgClocks.outRecords[e.id] | local | date: 'shortTime'}}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

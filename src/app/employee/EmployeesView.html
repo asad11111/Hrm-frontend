@@ -1,0 +1,32 @@
+<page-header title="Employees"></page-header>
+
+<employees-list
+        [state]="state?.employeesList"
+        [departments]="state.departments.data"
+        [designations]="state.designations.data"
+>
+</employees-list>
+
+<create-employee-modal
+    [state]="state.createEmployee"
+    [employees]="state.employees"
+    [designations]="state.designations"
+    [departments]="state.departments"
+    [roles]="state.roles"
+>
+</create-employee-modal>
+
+<edit-employee-modal
+        [state]="state.editEmployee"
+        [employees]="state.employees"
+        [designations]="state.designations"
+        [departments]="state.departments"
+        [roles]="state.roles"
+>
+</edit-employee-modal>
+
+<confirm [_show]="state.employeesList.deleteEmployee != null"
+         [message]="'Are you sure you want to delete this record'"
+         (onSelect)="store.deleteEmployee($event)"
+>
+</confirm>

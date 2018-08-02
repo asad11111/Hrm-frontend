@@ -1,0 +1,137 @@
+<page-header title="Packages Details"></page-header>
+<div class="wrapper wrapper-content  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox">
+        <div class="ibox-title">
+          <h5 class="box-title">Packages:</h5>
+          <div class="pull-right font-bold">
+             Payable amount : {{paymentHistory.payableAmmount?paymentHistory.payableAmmount:0}} $ 
+             <button *ngIf="paymentHistory.payableAmmount>0" (click)="payment_form.show()" class="btn btn-xs btn-primary"  > Pay Now </button>
+          </div>
+        </div>
+        <div class="ibox-content">
+          <div class="row">
+            <div class="col-md-12">
+
+              <div class="col-md-3" *ngFor="let d of packages.data">
+                <div class="widget text-center panel panel-primary">
+                  <h3 class="font-bold no-margins">{{ d.title }}</h3>
+                  <h1 class="m-xs font-bold">{{ d.amount }} $</h1>
+                  <small>Billing: {{ d.paymentcycle }}</small>
+                  <h4 class="font-bold">Employees: {{ d.employees }}</h4>
+                  <h3 class="font-bold no-margins"> {{ getModuleName(d) }} </h3>
+                  <p class="packag-content" >{{d.details}}</p>
+                  <div class="row-fluid"><br>
+                    <button *ngIf="d.selected>0" class="btn btn-xs btn-danger" (click)="removePackage(d)"> Unsubscribe </button>
+                    <button *ngIf="d.selected==0" class="btn btn-xs btn-primary" (click)="addPackage(d)"> Subcribe </button>
+                  </div>
+                </div>
+              </div><!-- Package Box -->
+
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="panel">
+              <h3 class="font-bold">Payment history  
+                <button *ngIf="refresh_bill==true" (click)="loadPaymentHistory()" class="btn  btn-xs btn-success" > reload </button></h3>
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Amount</th>
+                    <th>Paid Date</th>
+                    <th>Payment Method</th>
+                    <th>Type</th>
+                    <th>Transaction id</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let d of paymentHistory.paymentHistory" id="packages_{{d.id}}">
+                    <td> {{ d.amount }} $</td>
+                    <td>{{ dateFormate(d.created_at,'Do MMMM YYYY') }}</td>
+                    <td>{{ d.payment_method }}</td>
+                    <td>{{ d.type }}</td>
+                    <td>{{ d.transaction_id }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Existing -->
+
+<!-- /.Add categories ........ -->
+<div bsModal class="modal fade" #payment_form="bs-modal" [config]="{backdrop: false}" id="payment_form">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" (click)="payment_form.hide()" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Payment details</h4>
+      </div>
+      <div class="modal-body">
+        <errors [errors]="errors"></errors>
+        <form id="category_form_inputs" method="POST">
+         
+
+         <div class="form-group row">
+            <label class="col-md-4">Amount</label>
+            <div class="col-md-8 font-bold">
+              {{paymentHistory.payableAmmount?paymentHistory.payableAmmount:0}} $
+            </div>
+          </div>
+
+
+          <div class="form-group row">
+            <label class="col-md-4">Card Number</label>
+            <div class="col-md-8">
+              <input [(ngModel)]="payment.card_number" type="number" class="form-control" id="cardnumber" name="cardnumber">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-md-4">Expiry Month</label>
+            <div class="col-md-4">   
+              <select  [(ngModel)]="payment.exp_month"  name="exp_month"  class="form-control" >
+                <option *ngFor="let d of months" [value]="d"  > {{d}} </option>
+              </select>           
+ 
+            </div>          
+          </div>
+
+           <div class="form-group row">           
+            <label class="col-md-4">Expiry Year</label>
+            <div class="col-md-4">              
+              <input [(ngModel)]="payment.exp_year" maxlength="4" type="text" class="form-control" id="exp_year" name="exp_year" />
+            </div>
+          </div>
+
+           <div class="form-group row">           
+            <label class="col-md-4">CVC /Security Code</label>
+            <div class="col-md-4">              
+              <input [(ngModel)]="payment.cvc" maxlength="4" type="text" class="form-control" id="cvc" name="cvc" />
+            </div>
+          </div>
+ 
+       
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" (click)="payNow()" class="btn btn-primary"><i class="fa {{save_package_btn}}" ></i> Pay Now </button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<confirm #confirmreviewer></confirm>
+<alert #alertpoup></alert>

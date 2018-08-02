@@ -1,0 +1,69 @@
+.office-timing {
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: #0292E3;
+    border-radius: 5px;
+    padding: 20px;
+}
+.office-timing .office-timing-title {
+    color: #FFF;
+    margin: 0;
+}
+.office-timing .office-timing-body {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    border-radius: 5px;
+    background: #FFF;
+    padding: 30px 20px;
+}
+.office-timing-body .office-timing-type {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /*border-right: 1px solid #EEE;*/
+}
+.office-timing .office-time {
+    display: flex;
+    flex-direction: column;
+}
+.office-time .office-time-label {
+    color: #0292E3;
+    font-weight: bold;
+}
+
+.office-time .office-time-text {
+    margin: 0;
+}
+.office-timing-type .office-timing-type-label {
+    font-weight: bold;
+}
+.office-timing .office-timing-footer {
+    color: #FFF;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+.office-timing-avg-clock {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #FFF;
+}
+.office-timing-avg-clock-text  {
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.office-timing-avg-clock-text .office-timing-avg-clock-text-label {
+    font-weight: bold; font-size: 0.85em;
+}
+.office-timing-avg-clock-text h1{
+    margin: 0;
+}
+.office-timing-avg-clock-text h1 small {
+    color: #FFF;
+    font-size: 0.5em;
+}

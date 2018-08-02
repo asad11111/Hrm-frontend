@@ -1,0 +1,23 @@
+<div class="ibox upcoming-leaves">
+    <div class="ibox-title">
+        <h5>Upcoming Leaves</h5>
+    </div>
+    <div class="ibox-content">
+        <ul class="todo-list m-t">
+            <h3 *ngIf="data?.leaves && data?.leaves.length == 0" class="text-center">No upcoming leaves</h3>
+            <li class="upcoming-leave-item" *ngFor="let l of data?.leaves">
+                <img [src]="getEmployeeImage(l.submitted_by)" class="img-circle" width="32px" height="32px">
+                <small>
+                    {{ data.employees[l.submitted_by].first_name }}
+                    {{data.employees[l.submitted_by].last_name}}
+                </small>
+                <small class="label label-primary">
+                    <i class="fa fa-clock-o"></i> {{leavesCount(l)}}
+                </small>
+                <small [ngClass]="['text', statusClasses[l.status], 'pull-right']" style="margin-top: 6px">
+                    {{status[l.status]}}
+                </small>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,46 @@
+<div class="ibox">
+    <div class="ibox-title">
+        <h5>Attendance</h5>
+        <div class="pull-right">
+            <ng-container *ngIf="data.length !== 0">
+                <div class="pull-right" dropdown style="position: relative">
+                    <button type="button" class="btn btn-default btn-xs" dropdownToggle>
+                        {{data[index]?.shift}} <span class="caret" *ngIf="data.length > 1"></span>
+                    </button>
+                    <ng-container *ngIf="data.length > 1">
+                        <ul *dropdownMenu class="dropdown-menu dropdown-menu-left">
+                            <li *ngFor="let a of data; let i = index">
+                                <a (click)="setIndex(i)">{{a.shift}}</a>
+                            </li>
+                        </ul>
+                    </ng-container>
+                </div>
+            </ng-container>
+            <!--<div class="btn-group">-->
+                <!--<button type="button"-->
+                        <!--class="btn btn-xs btn-white"-->
+                        <!--[(ngModel)]="current"-->
+                        <!--btnRadio="yesterday">-->
+                    <!--Yesterday-->
+                <!--</button>-->
+                <!--<button type="button"-->
+                        <!--[(ngModel)]="current"-->
+                        <!--btnRadio="today"-->
+                        <!--class="btn btn-xs btn-white">-->
+                    <!--Today-->
+                <!--</button>-->
+            <!--</div>-->
+        </div>
+    </div>
+    <div class="ibox-content clearfix">
+        <h2 *ngIf="data.length === 0" class="text-center">
+            No Shift is Currently Assigned to any Employee
+        </h2>
+        <canvas #pie height="200px" [hidden]="data.length === 0"></canvas>
+        <button (click)="navigateMore()"
+                *ngIf="permissions.can('Attendance.manage_attendance') && data.length !== 0"
+                class="btn btn-xs btn-primary pull-right">
+            More
+        </button>
+    </div>
+</div>

@@ -1,0 +1,83 @@
+<div class="ibox">
+        <div class="ibox-title"> Review scale </div>
+        <div class="ibox-content clearfix">
+
+
+
+            
+        <div class="col-lg-6">
+                
+                            <div class="col-md-12">
+                                <div class="box-body box box-primary">
+                                    <table class="table table-hover table-striped">
+                                        <tr>
+                                            <th width="90%">Label\Value</th>
+                                            <th width="10%">Action</th>
+                                        </tr>
+                                        <tr *ngFor="let s of scales">
+                                            <td>
+                                                <div *ngIf="s.type=='custome'">
+                                                    <span *ngFor="let c of s.scale_content" >
+                                                        {{c.label}}={{c.value}} <br> </span>                                      
+                                                </div>
+                                                <div *ngIf="s.type=='range'">
+                                                    <label>Prefix : </label> {{s.scale_content.prefix}}
+                                                    <br>
+                                                    <span  ><strong>Range : </strong>  {{ s.scale_content.min}} to  {{ s.scale_content.max}} </span>                                      
+                                                </div>
+                                            </td>
+                                            <td> <button class="btn btn-danger btn-xs" (click)="remove_scale(s,1)"><i class="fa fa-trash" ></i></button>                                </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                
+                        </div>
+                        <div class="col-lg-6">
+                            <div *ngIf="scalings.length > 0">
+                                <table class="table table-hover table-striped">
+                                    <tr>
+                                        <th width="40%">Label</th>
+                                        <th width="40%">Value</th>
+                                        <th width="20%">Action</th>
+                                    </tr>
+                                    <tr *ngFor="let scale of scalings">
+                                        <td> {{scale.label}} </td>
+                                        <td> {{scale.value}} </td>
+                                        <td> <button class="btn btn-danger btn-xs" (click)="remove_scale(scale)"><i class="fa fa-trash" ></i></button>                            </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <form role="form">
+                                <div class="form-group">
+                                    <label>Scale type</label>
+                                    <select class="form-control" [(ngModel)]="scale_type" id="scale_type" name="scale_type">
+                                        <option value="range" > Range </option>
+                                        <option value="custome" > Custom </option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>{{(scale_type=='custome')?"Label":"Prefix"}}</label>
+                                    <input type="text" [(ngModel)]="label" class="form-control" id="label" name="label">
+                                </div>
+                                <div class="form-group" *ngIf="scale_type=='range'">
+                                    <label>Minimum value</label>
+                                    <input type="number" [(ngModel)]="minimum_value" class="form-control" min="0" id="minimum" name="minimum">
+                                </div>
+                                <div class="form-group" *ngIf="scale_type=='range'">
+                                    <label>Maximum value</label>
+                                    <input type="number" [(ngModel)]="maximum_value" class="form-control" min="0" id="maximum" name="maximum">
+                                </div>
+                                <div class="form-group" *ngIf="scale_type=='custome'">
+                                    <label>Value</label>
+                                    <input type="number" [(ngModel)]="scale_value" class="form-control" min="0" id="scale_value" name="scale_value">
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary" *ngIf="scalings.length >0 || scale_type=='range'" (click)="save_scaling()">Save</button>
+                                    <button class="btn btn-info" *ngIf="scale_type=='custome'" (click)="add_scaling()"> Add more </button>
+                                </div>
+                            </form>
+                        </div>
+
+        </div>
+</div>

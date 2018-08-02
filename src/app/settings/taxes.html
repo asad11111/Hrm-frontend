@@ -1,0 +1,74 @@
+<div class="ibox">
+  <div class="ibox-title"> 
+      Taxes
+
+      <div class="pull-right">
+            <button class="btn btn-primary btn-xs" (click)="_show_modal=true">
+                <i class="fa fa-plus-circle"></i>
+                Add Tax
+            </button>
+        </div>
+  </div>
+  <div class="ibox-content">
+
+        <table class="table table-stripped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Value (%)</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let t of taxes">
+                    <td>{{t.id}}</td>
+                    <td>{{t.title}}</td>
+                    <td>{{t.value}} %</td>
+                    <td>
+                        <button class="btn btn-xs btn-inverse"
+                                (click)="edit(t); tax_id=t.id">
+                            Edit
+                        </button>
+                        <button class="btn btn-xs btn-danger"
+                                (click)="destroy(t)">
+                            Remove
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+  </div>
+</div>
+
+<modal [show]="tax_id > 0 || _show_modal"
+       (hide)="tax_id = 0; title=''; value=''; _show_modal=false"
+       title="Taxes"
+       size="sm"
+>
+    <div body>
+
+        <errors [errors]="errors"></errors>
+
+        <form class="department-form">
+
+            <div class="form-group">
+                <label>Title</label>
+                <input [(ngModel)]="title" name="title" class="form-control"/>
+            </div>
+            <div>
+                <label>Value</label>
+                <input [(ngModel)]="value" name="value" class="form-control" type="number" />
+            </div>
+        </form>
+    </div>
+    <div footer>
+        <button class="btn btn-primary" (click)=" tax_id > 0 ? update() : create();">
+            <i class="fa fa-check-circle"></i>
+            {{ tax_id > 0 ? 'Save' : 'Add'}}
+        </button>
+    </div>
+</modal>
+
+<confirm #confirm>
+</confirm>

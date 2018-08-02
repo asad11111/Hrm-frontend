@@ -1,0 +1,149 @@
+.sprite {
+    background-image: url(spritesheet.png);
+    background-repeat: no-repeat;
+    display: inline-block !important;
+}
+
+.sprite-average-clock-in {
+    width: 35px;
+    height: 35px;
+    background-position: -5px -5px;
+}
+
+.sprite-clock-in-at {
+    width: 18px;
+    height: 17px;
+    background-position: -50px -5px;
+}
+
+.sprite-clock-in-bio {
+    width: 19px;
+    height: 21px;
+    background-position: -78px -5px;
+}
+
+.sprite-clock-in-desktop {
+    width: 16px;
+    height: 14px;
+    background-position: -107px -5px;
+}
+
+.sprite-clock-in-late {
+    width: 18px;
+    height: 17px;
+    background-position: -133px -5px;
+}
+
+.sprite-clock-in-mobile {
+    width: 20px;
+    height: 21px;
+    background-position: -161px -5px;
+}
+
+.sprite-clock-lg {
+    width: 65px;
+    height: 65px;
+    background-position: -50px -36px;
+}
+
+.sprite-dashboard-system-activities {
+    width: 67px;
+    height: 68px;
+    background-position: -125px -36px;
+}
+
+.sprite-dashboard-total-departments {
+    width: 57px;
+    height: 63px;
+    background-position: -5px -114px;
+}
+
+.sprite-dashboard-total-employees {
+    width: 79px;
+    height: 63px;
+    background-position: -72px -114px;
+}
+
+.sprite-office-time-morning {
+    width: 31px;
+    height: 27px;
+    background-position: -161px -114px;
+}
+
+.sprite-profile-average-clock-in {
+    width: 35px;
+    height: 35px;
+    background-position: -161px -151px;
+}
+
+.sprite-profile-clock-bio {
+    width: 35px;
+    height: 39px;
+    background-position: -202px -5px;
+}
+
+.sprite-profile-clock-desktop {
+    width: 30px;
+    height: 27px;
+    background-position: -5px -54px;
+}
+
+.sprite-profile-clock-device {
+    width: 37px;
+    height: 40px;
+    background-position: -202px -54px;
+}
+
+.sprite-sidenav-attendance {
+    width: 18px;
+    height: 17px;
+    background-position: -202px -104px;
+}
+
+.sprite-sidenav-calendar {
+    width: 16px;
+    height: 17px;
+    background-position: -230px -104px;
+}
+
+.sprite-sidenav-dashboard {
+    width: 17px;
+    height: 15px;
+    background-position: -206px -131px;
+}
+
+.sprite-sidenav-departments {
+    width: 18px;
+    height: 20px;
+    background-position: -233px -131px;
+}
+
+.sprite-sidenav-designations {
+    width: 14px;
+    height: 25px;
+    background-position: -206px -161px;
+}
+
+.sprite-sidenav-employees {
+    width: 9px;
+    height: 26px;
+    background-position: -230px -161px;
+}
+
+.sprite-sidenav-holidays {
+    width: 20px;
+    height: 21px;
+    background-position: -5px -197px;
+}
+
+.sprite-sidenav-leaves {
+    width: 19px;
+    height: 20px;
+    background-position: -35px -197px;
+}
+
+.sprite-sidenav-reviews {
+    width: 19px;
+    height: 22px;
+    background-position: -64px -197px;
+}

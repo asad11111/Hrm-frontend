@@ -1,0 +1,694 @@
+<page-header title="Edit review"></page-header>
+<div class="wrapper wrapper-content  animated fadeInRight">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ibox">
+				<div class="ibox-content">
+
+
+
+					<!-- form start -->
+					<form role="form" class="form-horizontal">
+						<errors [errors]="errors"></errors>
+						<div class="panel panel-primary">
+							<div class="panel-heading">Review</div>
+							<div class="panel-body">
+
+								<div class="col-md-4">
+									<div class="form-group">
+										<label class="col-md-4" for="review_title">Review type</label>
+										<div class="col-md-8">
+											<select class="form-control text-capitalize" disabled [(ngModel)]="review.review_type" name="review_type" id="review_type">
+												<option value=""> Select review type </option>
+												<option *ngFor="let t of review_types" value="{{t.id}}" class="text-capitalize"> {{t.title}} </option>
+											</select>
+										</div>
+									</div>
+
+									<div class="form-group" *ngIf="review.review_type==1">
+										<label class="col-md-4" for="review_title">Frequency</label>
+										<div class="col-md-8">
+											<div class="input-group input-group-sm">
+												<select class="form-control" disabled [(ngModel)]="review.frequency_id" name="frequency_id" id="frequency_id">
+													<option value=""> Select review frequency </option>
+													<option *ngFor="let period of frequency_types" value="{{period.id}}"> {{period.title}} </option>
+												</select>
+												<span class="input-group-btn">
+													<button type="button" (click)="load_review_types()" class="btn btn-info btn-flat">
+														<i class="fa  fa-refresh"></i>
+													</button>
+												</span>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-md-4" for="starting_date">Starting month</label>
+										<div class="col-md-4">
+											<select class="form-control" (change)="save_start_end_date($event.target.value,1)" [(value)]="month_years.s_m" name="start_month">
+												<option value='01'>Janaury</option>
+												<option value='02'>February</option>
+												<option value='03'>March</option>
+												<option value='04'>April</option>
+												<option value='05'>May</option>
+												<option value='06'>June</option>
+												<option value='07'>July</option>
+												<option value='08'>August</option>
+												<option value='09'>September</option>
+												<option value='10'>October</option>
+												<option value='11'>November</option>
+												<option value='12'>December</option>
+											</select>
+										</div>
+										<div class="col-md-4">
+											<select class="form-control" (change)="save_start_end_date($event.target.value,2)" [(value)]="month_years.s_y" name="start_month">
+												<option *ngFor="let y of years" [value]="y"> {{y}} </option>
+											</select>
+										</div>
+									</div>
+									<div *ngIf="review.frequency_id==1 || review.review_type > 1" class="form-group">
+										<label class="col-md-4" for="end_date">End month</label>
+										<div class="col-md-4">
+											<select class="form-control" (change)="save_start_end_date($event.target.value,3)" [(value)]="month_years.e_m" name="start_month">
+												<option value='01'>Janaury</option>
+												<option value='02'>February</option>
+												<option value='03'>March</option>
+												<option value='04'>April</option>
+												<option value='05'>May</option>
+												<option value='06'>June</option>
+												<option value='07'>July</option>
+												<option value='08'>August</option>
+												<option value='09'>September</option>
+												<option value='10'>October</option>
+												<option value='11'>November</option>
+												<option value='12'>December</option>
+											</select>
+										</div>
+										<div class="col-md-4">
+											<select (change)="save_start_end_date($event.target.value,4)" class="form-control" [(value)]="month_years.s_y" name="start_month">
+												<option *ngFor="let y of years" [value]="y"> {{y}} </option>
+											</select>
+										</div>
+									</div>
+
+
+								</div>
+								<!-- /.col-md-6 -->
+								<div class="col-md-4">
+									<div class="form-group">
+										<label class="col-md-4" for="review_title">Review title</label>
+										<div class="col-md-8">
+											<input type="text" [(ngModel)]="review.title" class="form-control" name="review_title" id="review_title" placeholder="review title">
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-md-5" for="template_id">Review template</label>
+										<div class="col-md-7">
+											<div class="input-group input-group-sm">
+												<select (change)="select_review_template_default($event.target.value)" class="form-control" [(ngModel)]="review.template_id"
+												 name="template_id" id="template_id">
+													<option value="9999999">Review templates by designation</option>
+													<option *ngFor="let rev_temp of review_template" value="{{rev_temp.id}}"> {{rev_temp.title}} </option>
+												</select>
+												<span class="input-group-btn">
+													<button type="button" (click)="reload_templates()" class="btn btn-info btn-flat">
+														<i class="fa  fa-refresh"></i>
+													</button>
+												</span>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-md-5" for="months">Review deadline</label>
+										<div class="col-md-7">
+											<datepicker [(value)]="review.deadline"></datepicker>
+										</div>
+									</div>
+
+
+								</div>
+								<!-- /.col-md-6 -->
+								<div class="col-md-4">
+									<div class="form-group hide">
+										<label class="col-md-6" for="months">Status</label>
+										<div class="col-md-6">
+											<select class="form-control" name="status" id="status" [(ngModel)]="review.status">
+												<option value="1"> Active </option>
+												<option value="0"> Disable </option>
+											</select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-md-6" for="months">360 Degree Evaluation</label>
+										<div class="col-md-6">
+											<div class="radio">
+												<input type="radio" (click)="change_evaluation($event.target)" [(ngModel)]="review.evaluation_type" id="evaluation_type_on"
+												 name="evaluation_type" value="on" />
+												<label htmlFor="evaluation_type_on"> On </label>
+											</div>
+											<div class="radio">
+												<input type="radio" (click)="change_evaluation($event.target)" [(ngModel)]="review.evaluation_type" id="evaluation_type_off"
+												 name="evaluation_type" value="off" />
+												<label htmlFor="evaluation_type_off"> Off </label>
+											</div>
+
+										</div>
+									</div>
+
+								</div>
+								<!-- /.col-md-6 -->
+								<div class="form-group">
+									<label class="col-md-12" for="description">Evaluation Instruction</label>
+									<div class="col-md-12">
+										<textarea class="form-control" [(ngModel)]="review.description" rows="4" name="description" id="description"></textarea>
+									</div>
+								</div>
+
+
+							</div>
+
+						</div>
+						<!-- /.box-body -->
+					</form>
+
+
+					<!-- Legends -->
+
+					<div class="row-fluid">
+
+						<div class="panel panel-primary">
+							<div class="panel-body">
+								<div class="row">
+									<div class="col-md-2">Legends: </div>
+									<div class="col-md-2">
+										<span class="text-green text-bold ">D</span>: Direct Report </div>
+									<div class="col-md-4">
+										<span class="text-red text-bold text-cross">T</span>: Template is not linked with designation</div>
+									<div class="col-md-2">
+										<span class="text-light-blue text-bold">S</span>: Self Review</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<!-- End Legends -->
+
+
+
+
+					<!-- Saved reviewer  -->
+					<div class="row-fluid" *ngIf="saved_temp_reviewers.length > 0 && check_peers_mngr()==true">
+						<div class="panel panel-primary">
+							<div class="panel-body">
+								<!-- box-body -->
+								<table class="table table-hover table-striped">
+									<tr>
+										<th width="20%">Review for Employee</th>
+										<th width="30%">Peers/Direct report</th>
+										<th width="30%">Managers</th>
+										<th width="20%">Review template</th>
+									</tr>
+									<tr *ngFor="let reviewer of saved_temp_reviewers" class="{{(reviewer.peers.length >0 || reviewer.managers.length >0  )?'':'text-red'}}">
+										<td>
+											<i id="{{reviewer.id}}" (click)="remove_reviewer(reviewer,reviewer,1)" class="fa remove_btn  fa-remove"></i> {{reviewer.first_name}} {{reviewer.last_name}} </td>
+										<td>
+											<ul class="left-pad-none list-style-none">
+												<li class="tag" *ngFor="let peer of reviewer.peers">
+													<i id="{{peer.id}}" (click)="remove_reviewer(reviewer,peer,2)" class="fa remove_btn  fa-remove"></i> {{peer.first_name}} {{peer.last_name}}
+													<small> {{"(" + peer.designation + ")"}} </small>
+													<span *ngIf="reviewer.id==peer.id" class="text-light-blue text-bold">S</span>
+													<span *ngIf="peer.department_id!=reviewer.department_id" class="text-green text-bold ">D</span>
+
+												</li>
+											</ul>
+										</td>
+										<td>
+											<ul class="left-pad-none list-style-none">
+												<li class="tag" *ngFor="let manager of reviewer.managers">
+													<i id="{{manager.id}}" (click)="remove_reviewer(reviewer,manager,3)" class="fa remove_btn  fa-remove"></i> {{manager.first_name}} {{manager.last_name}}
+													<small>{{"("+manager.designation+")"}}</small>
+												</li>
+											</ul>
+										</td>
+										<td>
+											<ul class="left-pad-none list-style-none">
+												<li class="tag">
+													{{reviewer.review_template.title}}
+												</li>
+											</ul>
+										</td>
+
+									</tr>
+								</table>
+								<!-- /.box-body -->
+							</div>
+						</div>
+					</div>
+					<!-- /.Saved reviewer  -->
+
+
+
+
+
+
+
+
+
+
+
+					<div class="row-fluid">
+						<div class="panel panel-primary">
+							<div class="panel-body">
+
+								<div class="row">
+									<div class="form-group">
+										<label class="col-md-2" for="department">Select a department</label>
+										<div class="col-md-3">
+											<select class="form-control department_id_sel" (change)="load_employees($event.target.value)" name="department" id="department">
+												<option value="0"> Select department </option>
+												<option *ngFor="let dep of departments" value="{{dep.id}}"> {{dep.name}} </option>
+											</select>
+										</div>
+										<label class="col-md-3" *ngIf="selected_for_employee_id && review.template_id !=9999999" for="department">Review template for {{current_employee_name.first_name}} {{current_employee_name.last_name}}</label>
+										<div class="col-md-4" *ngIf="selected_for_employee_id && review.template_id !=9999999">
+											<select class="form-control" [(ngModel)]="for_emp_template_id" (change)="select_review_template($event.target)" name="for_emp_template_id"
+											 id="for_emp_template_id">
+												<option value="0"> Select review template </option>
+												<option *ngFor="let template of review_template" value="{{template.id}}"> {{template.title}} </option>
+											</select>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-4">
+
+
+
+										<div class="panel panel-primary">
+											<div class="panel-heading">Employees</div>
+											<!-- /.box-header -->
+											<div class="panel-body">
+												<!-- /.box-header -->
+												<!-- box-body -->
+												<table class="table table-hover table-striped">
+													<tr *ngFor="let emp of dep_employees">
+														<th>
+															<div class="radio">
+
+																<input type="radio" id="peer_id_{{emp.id}}" (change)="load_manager_peers($event.target,emp)" name="employee_id" value="{{emp.id}}">
+
+
+																<label htmlFor="peer_id_{{emp.id}}">
+																	<span *ngIf="review.template_id==9999999 && emp.hastemplate==false" class="text-red text-bold text-cross">T</span>
+																	{{emp.first_name}} {{emp.last_name}}
+																	<i *ngIf="employee_selected(emp)==true" class="pull-right fa fa-check text-green"></i>
+																	<br>
+																	<small>{{"("+emp.designation+")"}}
+																		<button *ngIf="emp.hastemplate==false && review.template_id==9999999" (click)="linkTemplateDesignation(emp)" class="btn btn-xs btn-primary">
+																			<i class="fa fa-link"></i>
+																		</button>
+																	</small>
+
+
+																</label>
+															</div>
+														</th>
+													</tr>
+												</table>
+												<!-- /.box-body -->
+											</div>
+
+										</div>
+
+
+
+
+
+									</div>
+
+									<div class="col-md-4">
+
+
+
+										<div class="panel panel-primary">
+											<div class="panel-heading">Peers/Direct report
+												<button (click)="show_ad_more_employee(2)" *ngIf="selected_for_employee_id" class="btn btn-success btn-xs pull-right">add more</button>
+												<button (click)="select_all_emp(2)" *ngIf="selected_for_employee_id > 0 && review.evaluation_type == 'off'" class="btn btn-success btn-xs pull-right margn-right">Add all</button>
+											</div>
+											<!-- /.box-header -->
+											<div class="panel-body">
+
+												<!-- /.box-header -->
+												<!-- box-body -->
+												<table class="table table-hover table-striped peers_employees">
+													<tr *ngFor="let peer of peer_employees">
+														<th>
+															<button id="add_peers_{{peer.id}}" (click)="select_peers(peer)" class="btn btn-xs  btn-{{(check_exist_peers_mngr(2, peer.id)==true)?'primary':'success'}}">
+																<i class="fa fa-{{(check_exist_peers_mngr(2, peer.id)==true)?'check':'plus'}}"></i>
+															</button>
+															<label htmlFor="add_peers_{{peer.id}}"> {{peer.first_name}} {{peer.last_name}}
+																<small>{{"("+peer.designation+")"}}</small>
+																<span *ngIf="selected_for_employee_id==peer.id" class="text-light-blue text-bold">S</span>
+																<span *ngIf="peer.parent_id==current_employee_name.id" class="text-green text-bold ">D</span>
+															</label>
+														</th>
+													</tr>
+												</table>
+												<!-- /.box-body -->
+
+											</div>
+										</div>
+
+
+
+
+									</div>
+									<!-- col-md-4 -->
+
+									<div class="col-md-4">
+
+
+
+
+
+
+
+										<div class="panel panel-primary">
+											<div class="panel-heading">Managers
+												<button *ngIf="selected_for_employee_id" (click)="show_ad_more_employee(3)" class="btn btn-success btn-xs pull-right">add more</button>
+												<button *ngIf="selected_for_employee_id > 0 && review.evaluation_type == 'off'" (click)="select_all_emp(3)" class="btn btn-success btn-xs pull-right margn-right">Add all</button>
+											</div>
+											<!-- /.box-header -->
+											<div class="panel-body">
+
+
+
+
+												<!-- /.box-header -->
+												<!-- box-body -->
+												<table class="table table-hover table-striped managers_employees">
+													<tr *ngFor="let m of managers_employees">
+														<th>
+															<button id="add_managers_{{m.id}}" (click)="select_mngr(m)" class="btn btn-xs btn-{{(check_exist_peers_mngr(3, m.id)==true)?'primary':'success'}}">
+																<i class="fa fa-{{(check_exist_peers_mngr(3,m.id)==true)?'check':'plus'}}"></i>
+															</button>
+															<label htmlFor="add_managers_{{m.id}}"> {{m.first_name}} {{m.last_name}}
+																<small> {{"("+m.designation+")"}}</small>
+																<span *ngIf="selected_for_employee_id==m.id" class="text-light-blue text-bold">S</span>
+															</label>
+														</th>
+													</tr>
+												</table>
+												<!-- /.box-body -->
+											</div>
+										</div>
+									</div>
+								</div>
+
+
+
+							</div>
+
+						</div>
+
+						<div class="row">
+							<div class="col-md-12" >
+									<button type="button" (click)="view_review_details.show()" class="btn btn-primary pull-right"> Preview </button>
+							</div>
+							
+						</div>
+
+					</div>
+
+
+
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<!-- /.Existing -->
+
+
+
+
+
+
+
+
+<!-- /.modal -->
+
+<div bsModal [config]="{backdrop: false}" class="modal inmodal fade" #select_employee_form="bs-modal" id="select_employee_form">
+	<div class="modal-dialog ">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" (click)="select_employee_form.hide()" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Select employee to add</h4>
+			</div>
+			<div class="modal-body">
+
+				<div class="form-group">
+					<label class="col-md-4" for="department">Select a department</label>
+					<div class="col-md-8">
+						<select class="form-control" (change)="load_employees_more($event.target.value)" name="department_more" id="department_more">
+							<option value="0"> Select department </option>
+							<option *ngFor="let dep of departments" value="{{dep.id}}"> {{dep.name}} </option>
+						</select>
+					</div>
+				</div>
+
+				<table class="table table-hover table-striped add_more_employee">
+					<tr *ngFor="let emp of dep_employees_more">
+						<th>
+							<button id="employee_more_{{emp.id}}" (click)="save_more_reviewer(emp)" class="btn btn-xs btn-{{(check_exist_peers_mngr(employee_cat_id,emp.id)==true)?'primary':'success'}}">
+								<i class="fa fa-{{(check_exist_peers_mngr(employee_cat_id,emp.id)==true)?'check':'plus'}}"></i>
+							</button>
+							<label htmlFor="employee_more_{{emp.id}}"> {{emp.first_name}} {{emp.last_name}} {{"("+emp.designation+")"}}</label>
+						</th>
+					</tr>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" (click)="select_employee_form.hide()"> Done ! </button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+<div bsModal [config]="{backdrop: false}" class="modal inmodal fade" #view_review_details="bs-modal" id="view_review_details">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" (click)="view_review_details.hide()" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">View review details</h4>
+			</div>
+			<div class="modal-body">
+
+
+				<ngb-tabset>
+					<ngb-tab title="Basic">
+						<template ngbTabContent>
+							<div class="row">
+
+								<table class="table table-hover table-striped">
+									<tr>
+										<th width="40%">Review type</th>
+										<td width="60%">
+											<div class="col-md-6">
+												<select class="form-control text-capitalize" disabled [(ngModel)]="review.review_type" name="review_type" id="review_type">
+													<option value=""> Select review type </option>
+													<option *ngFor="let t of review_types" value="{{t.id}}" class="text-capitalize"> {{t.title}} </option>
+												</select>
+											</div>
+										</td>
+									</tr>
+									<tr *ngIf="review.review_type==1">
+										<th width="40%">Frequency</th>
+										<td width="60%">
+											<div class="col-md-6">
+												<select class="form-control" disabled [(ngModel)]="review.frequency_id" name="frequency_id" id="frequency_id">
+													<option value=""> Select review frequency </option>
+													<option *ngFor="let period of frequency_types" value="{{period.id}}"> {{period.title}} </option>
+												</select>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>Review title</th>
+										<td>{{review.title}}</td>
+									</tr>
+									<tr>
+										<th>Starting month</th>
+										<td>{{review.starting_date}}</td>
+									</tr>
+									<tr *ngIf="review.frequency_id==1 || review.review_type > 1">
+										<th>End month</th>
+										<td>{{review.end_date}}</td>
+									</tr>
+									<tr>
+										<th>Review deadline</th>
+										<td>{{review.deadline}}</td>
+									</tr>
+									<tr class="hide">
+										<th>Status</th>
+										<td>
+											<div class="col-md-4">
+												<select disabled class="form-control" name="status" id="status" [(ngModel)]="review.status">
+													<option value="1"> Active </option>
+													<option value="0"> Disable </option>
+												</select>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>Evaluation Instruction</th>
+										<td>{{review.description}}</td>
+									</tr>
+								</table>
+							</div>
+						</template>
+					</ngb-tab>
+					<ngb-tab title="Reviewer">
+						<template ngbTabContent>
+							<div class="row">
+
+								<!-- Saved reviewer  -->
+								<div class="col-md-12">
+									<div class="box-body box box-primary scrollable">
+
+										<!-- box-body -->
+										<table class="table table-hover table-striped">
+											<tr>
+												<th width="20%">Review for Employee</th>
+												<th width="30%">Peers</th>
+												<th width="30%">Managers</th>
+												<th width="20%">Review template</th>
+											</tr>
+											<tr *ngFor="let reviewer of saved_temp_reviewers" class="{{(reviewer.peers.length >0 || reviewer.managers.length >0  )?'':'text-red'}}">
+												<td>
+													<i id="{{reviewer.id}}" (click)="remove_reviewer(reviewer,reviewer,1)" class="fa remove_btn  fa-remove"></i> {{reviewer.first_name}} {{reviewer.last_name}}
+												</td>
+												<td>
+													<ul class="left-pad-none list-style-none">
+														<li class="tag" *ngFor="let peer of reviewer.peers">
+															<i id="{{peer.id}}" (click)="remove_reviewer(reviewer,peer,2)" class="fa remove_btn  fa-remove"></i> {{peer.first_name}} {{peer.last_name}}
+															<small>{{"("+peer.designation+")"}}</small>
+															<span *ngIf="reviewer.id==peer.id" class="text-light-blue text-bold">S</span>
+															<span *ngIf="peer.parent_id==reviewer.id" class="text-green text-bold ">D</span>
+														</li>
+													</ul>
+												</td>
+												<td>
+													<ul class="left-pad-none list-style-none">
+														<li class="tag" *ngFor="let manager of reviewer.managers">
+															<i id="{{manager.id}}" (click)="remove_reviewer(reviewer,manager,3)" class="fa remove_btn  fa-remove"></i> {{manager.first_name}} {{manager.last_name}}
+															<small>{{"("+manager.designation+")"}}</small>
+														</li>
+													</ul>
+												</td>
+												<td>
+													<ul class="left-pad-none list-style-none">
+														<li class="tag">
+															{{reviewer.review_template.title}}
+														</li>
+													</ul>
+												</td>
+											</tr>
+										</table>
+										<!-- /.box-body -->
+									</div>
+								</div>
+								<!-- /.Saved reviewer  -->
+							</div>
+						</template>
+					</ngb-tab>
+				</ngb-tabset>
+
+
+			</div>
+			<!-- /.modal-body -->
+			<div class="modal-footer">
+				<button class="btn btn-danger" (click)="view_review_details.hide()"> Cancel </button>
+				<button class="btn btn-primary" (click)="save_review()"> {{review_btn}} </button>
+				<button class="btn btn-primary" (click)="save_review(2)"> Save Draft </button>
+			</div>
+			<!-- /.modal-footer -->
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+
+
+<div bsModal [config]="{backdrop: false}" class="modal inmodal fade" #link_template_designation="bs-modal" id="link_template_designation">
+	<div class="modal-dialog ">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" (click)="link_template_designation.hide()" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Designation and Review template relation</h4>
+			</div>
+			<div class="modal-body">
+
+				<form class="form-horizontal" role="form">
+					<div class="form-group">
+						<label class="col-md-4" for="department">Designation</label>
+						<div class="col-md-8">
+							<select class="form-control" [(ngModel)]="tempdes.designation_id" name="designation_id" id="designation_id">
+								<option value="0"> Select designation </option>
+								<option *ngFor="let d of desig_based_template" value="{{d.id}}"> {{d.name}} </option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4" for="department">Review Template</label>
+						<div class="col-md-8">
+							<select class="form-control" [(ngModel)]="tempdes.review_template_id" name="temp_desig_id" id="temp_desig_id">
+								<option value="0"> Select review template </option>
+								<option *ngFor="let template of review_template" value="{{template.id}}"> {{template.title}} </option>
+							</select>
+						</div>
+					</div>
+
+				</form>
+
+
+
+			</div>
+			<!-- /.modal-body -->
+			<div class="modal-footer">
+				<button class="btn btn-primary" (click)="save_linkTemplateDesignation()"> Save </button>
+			</div>
+			<!-- /.modal-footer -->
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+<confirm #confirmreviewer></confirm>
+<alert #alertpoup></alert>

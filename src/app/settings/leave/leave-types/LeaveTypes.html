@@ -1,0 +1,47 @@
+<div class="ibox">
+    <div class="ibox-title">
+        Leave Types
+        <div class="pull-right">
+            <button class="btn btn-primary btn-xs" (click)="leaveType = {}">
+                <i class="fa fa-plus-circle"></i>
+                Add Type
+            </button>
+        </div>
+    </div>
+    <div class="ibox-content">
+
+        <table class="table table-stripped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Allowed</th>
+                    <th *ngIf="auth.hasModule('NZ-Payroll') && permission.can('NZ-Payroll.manage_nz_payroll')">Employee Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let l of leaveTypes">
+                    <td>{{l.name}}</td>
+                    <td>{{l.allowed}}</td>
+                    <td *ngIf="auth.hasModule('NZ-Payroll') && permission.can('NZ-Payroll.manage_nz_payroll')">
+                        {{l.employee_type == 1 ? 'Permanent' : 'Casual'}}
+                    </td>
+                    <td>
+                        <button class="btn btn-default btn-xs" (click)="leaveType = l">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<leave-type-modal [leaveType]="leaveType"
+                  (onHide)="leaveType = null"
+                  (onUpdate)="onUpdate($event)"
+                  (onCreate)="onCreate($event)"
+>
+
+</leave-type-modal>
+

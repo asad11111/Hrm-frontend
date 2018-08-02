@@ -1,0 +1,107 @@
+<div  class="ibox">
+    <div class="ibox-title">
+        <h3>Profile Details
+            <button class="btn btn-xs pull-right btn-primary hide" (click)="editEmployee(data.employee)"> <i class="fa fa-edit"></i> </button>
+        </h3>
+    </div>
+    <div   class="profile-view">
+        <div class="profile-cover">
+
+        </div>
+        <img [src]="data.employee ? '/core/api/v1/images/'+data.employee.image_id : ''" class="img-circle profile-img" style="background: #EEE"
+            width="128px" height="128px">
+        <div   class="profile-detail-body">
+            <h3 class="text-center">
+                    <div style="float:center;"  title="Logged in"  *ngIf="data.employee?.logged_today==1"  class="detail_employee"></div>
+                    <br>
+                {{data.employee?.first_name}} {{data.employee?.last_name}}
+                  <button *ngIf=" checkManager() && attendance.out_at==null "   (click)="clock(data?.employee,'i')" class="btn btn-xs btn-primary"> <i class="fa fa-clock-o" ></i> </button>
+                                <button *ngIf=" checkManager()  && attendance.out_at!=null "  (click)="clock(data?.employee,'o')" class="btn btn-xs btn-danger"
+                                 > <i class="fa fa-clock-o" ></i> </button>
+                                
+                                
+            </h3>
+           
+            <div class="text-info text-center">
+                {{data.designation?.name}}
+                <!--Principal Engineer-->
+            </div>
+            <div class="text-center hide">
+                <span style="font-weight: 600" class="text-info">5.0</span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+            </div>
+
+            <div style="width: 100%; margin-top: 15px">
+                <table class="table table-bordered" style="table-layout: fixed;  word-wrap: break-word;">
+                    <tr>
+                        <td>
+                            <span style="font-weight: 600" class="text-info">
+                            Department
+                        </span>
+                        </td>
+                        <td>
+                            {{data.department?.name}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: 600" class="text-info">
+                            Role
+                        </span>
+                        </td>
+                        <td>
+                            {{data.role?.name}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: 600" class="text-info">
+                            Parent/Manager
+                        </span>
+                        </td>
+                        <td>
+                            {{data.manager?.first_name}} {{data.manager?.last_name}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: 600" class="text-info">
+                            Joining Date
+                        </span>
+                        </td>
+                        <td>
+                            {{ data.employee?.date_of_joining | date: 'mediumDate' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: 600" class="text-info"> Phone </span>
+                        </td>
+                        <td>
+                            {{data.employee?.contact_number}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: 600" class="text-info">
+                            Email
+                        </span>
+                        </td>
+                        <td>
+                            {{data.user?.email}}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div style="display:none;">
+                <h4>Bio</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae delectus dignissimos eius eum laudantium
+                    non, officia sapiente. A debitis dolore error esse iste molestias quam rerum sequi totam. Aut, numquam.</p>
+            </div>
+        </div>
+    </div>
+</div>
+

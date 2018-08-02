@@ -1,0 +1,82 @@
+<page-header [title]=" (payroll.title) + ' Payroll'">
+</page-header>
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <box [busy]="fetching">
+                <div header>
+                    <h3 class="box-title">
+                        Salary Slips
+                    </h3>
+                </div>
+                <div class="ibox-content clearfix" body>
+                    <table class="table table-stripped" *ngIf="fetched && salarySlips.data.length > 0">
+                        <thead>
+                        <tr>
+                            <th>Employees</th>
+                            <th>Designation</th>
+
+                            <th>Gross Pay</th>
+                            <th>PAYE Deduction</th>
+                            <th>Child Support</th>
+                            <th>Student Loan</th>
+                            <th>MOJ</th>
+                            <th>KiwiSaver Deduction</th>
+                            <th>Total Deductions</th>
+                            <th>Net Pay</th>
+
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let s of salarySlips.data">
+                            <td>
+                                <a (click)="select(s)">
+                                    {{employees[s.employee_id].first_name }} {{employees[s.employee_id].last_name }}
+                                </a>
+                            </td>
+                            <td>
+                                {{employees[s.employee_id].designation}}
+                            </td>
+
+                            <td>{{get_amount(s.employee_id, 'Salary')}}</td>
+                            <td>{{get_amount(s.employee_id, 'PAYE Deduction')}}</td>
+                            <td>{{get_amount(s.employee_id, 'Child Support')}}</td>
+                            <td>{{get_amount(s.employee_id, 'Student Loan')}}</td>
+                            <td>{{get_amount(s.employee_id, 'MOJ')}}</td>
+                            <td>{{get_amount(s.employee_id, 'KiwiSaver Deduction')}}</td>
+                            <td>{{get_total_(s.employee_id, 1)}}</td>
+                            <td>{{get_total_(s.employee_id, 0) - get_total_(s.employee_id, 1)}}</td>
+
+                            <td>
+                                <button class="btn btn-xs btn-success"
+                                        (click)="select(s)">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                                <a class="btn btn-xs btn-primary"
+                                        [href]="downloadPath(s)">
+                                    <i class="fa fa-download"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="pull-right">
+                        <pagination [page]="salarySlips.current_page"
+                                    [perPage]="salarySlips.per_page"
+                                    [items]="salarySlips.total"
+                                    (pageChange)="fetch($event)" >
+                        </pagination>
+                    </div>
+                </div>
+            </box>
+        </div>
+    </div>
+</div>
+
+<salary-slip-modal [salarySlip]="salarySlip"
+                   [payroll]="payroll"
+                   [employee]="employee"
+                   (onHide)="salarySlip = null" >
+</salary-slip-modal>

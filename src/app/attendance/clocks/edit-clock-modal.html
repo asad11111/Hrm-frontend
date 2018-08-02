@@ -1,0 +1,28 @@
+<modal [show]="clock != null"
+       (hide)="onHide.emit()"
+       title="Edit Clock">
+    <div body>
+        <errors [errors]="errors"></errors>
+        <form name="editClockForm" *ngIf="clock">
+            <div class="form-group">
+                <label>In at</label>
+                <datetime-picker [(value)]="clock.in_at"
+                                 [format]="'YYYY-MM-DD HH:mm:ss'">
+                </datetime-picker>
+            </div>
+            <div class="form-group" >
+                <label>Out at</label>
+                <datetime-picker [(value)]="clock.out_at"
+                                 [format]="'YYYY-MM-DD HH:mm:ss'">
+                </datetime-picker>
+            </div>
+        </form>
+    </div>
+    <div footer>
+        <button class="btn btn-primary"
+                (click)="save()">
+            <i class="fa fa-check-circle-o"></i>
+            Save
+        </button>
+    </div>
+</modal>

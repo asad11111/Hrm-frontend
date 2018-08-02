@@ -1,0 +1,53 @@
+<div class="office-timing">
+    <div>
+        <ng-container *ngIf="data.length > 1">
+            <div class="pull-right" style="position: relative;" dropdown>
+                <button type="button" class="btn btn-default btn-xs" dropdownToggle>
+                    {{data[index]?.shift}} <span class="caret" *ngIf="data.length > 1"></span>
+                </button>
+                <ng-container *ngIf="data.length > 1">
+                    <ul *dropdownMenu class="dropdown-menu dropdown-menu-left">
+                        <li *ngFor="let a of data; let i = index">
+                            <a (click)="index = i">{{a.shift}}</a>
+                        </li>
+                    </ul>
+                </ng-container>
+            </div>
+        </ng-container>
+        <h2 class="office-timing-title">Office Time/Shift</h2>
+    </div>
+    <div class="office-timing-body">
+        <div class="office-timing-type">
+            <span class="sprite sprite-office-time-morning"></span>
+            <div class="office-timing-type-label">{{data[index]?.shift}}</div>
+        </div>
+
+        <div class="office-time">
+            <div class="office-time-label">Starting Time</div>
+            <h2 class="office-time-text" [innerHtml]="formatTime(data[index]?.start_time | momentTz: 'HH:mm:ss' : 'hh:mm A') || '00:00'"></h2>
+        </div>
+        <div class="office-time">
+            <div class="office-time-label">Ending Time</div>
+            <h2 class="office-time-text" [innerHtml]="formatTime(data[index]?.end_time | momentTz: 'HH:mm:ss' : 'hh:mm A') || '00:00'"></h2>
+        </div>
+    </div>
+    <div class="office-timing-footer">
+        <div class="office-timing-avg-clock">
+            <span class="sprite sprite-average-clock-in"></span>
+            <div class="office-timing-avg-clock-text">
+                <div class="office-timing-avg-clock-text-label">Average Clock In</div>
+                <h1 [innerHtml]="formatTime(data[index]?.avg_in_time | momentTz: 'HH:mm:ss': 'hh:mm A') || '00:00' ">
+                </h1>
+            </div>
+        </div>
+        <div class="office-timing-avg-clock">
+            <span class="sprite sprite-average-clock-in"></span>
+            <div class="office-timing-avg-clock-text">
+                <div class="office-timing-avg-clock-text-label">Average Clock Out</div>
+                <h1 [innerHtml]="formatTime(data[index]?.avg_out_time | momentTz: 'HH:mm:ss': 'hh:mm A') || '00:00' ">
+                </h1>
+            </div>
+        </div>
+
+    </div>
+</div>

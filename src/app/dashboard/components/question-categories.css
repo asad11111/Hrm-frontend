@@ -1,0 +1,13 @@
+.question-categories {
+
+}
+.question-categories .question-categories-bullet {
+    color: #0292E3;
+    margin-left: 10px;
+    margin-right: 10px;
+    float: left;
+}
+
+.question-categories .text {
+    float: left;
+}

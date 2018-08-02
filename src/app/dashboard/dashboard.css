@@ -1,0 +1,32 @@
+.dashboard-stat-item {
+    display: flex;
+}
+.dashboard-stat-left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /*background: ;*/
+    width: 80px;
+    height: 80px;
+}
+.dashboard-stat-right {
+    margin-left: 10px;
+    flex: 1;
+}
+.dashboard-stat-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #EEE;
+
+}
+.dashboard-stat-fig {
+    font-size: 3em;
+    margin: 0;
+}
+.dashboard-stat-body {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}

@@ -1,0 +1,18 @@
+/*@import './adminlte/bootstrap.min.css';*/
+@import "../node_modules/croppie/croppie.css";
+@import '~ng2-toastr/bundles/ng2-toastr.min.css';
+@import "./inspinia/css/bootstrap.min.css";
+@import './inspinia/css/plugins/fullcalendar/fullcalendar.css';
+@import "./inspinia/css/plugins/select2/select2.min.css";
+@import "./inspinia/css/_style.css";
+@import "./inspinia/font-awesome/css/font-awesome.css";
+@import '~bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css';
+/*@import '~select2-bootstrap-theme/dist/select2-bootstrap.min.css';*/
+@import './inspinia/datetimepicker/bootstrap-datetimepicker.css';
+@import './adminlte/timepicker.css';
+@import './adminlte/awesome-bootstrap-checkbox.css';
+
+html, body {
+    height: 100%;
+}
+

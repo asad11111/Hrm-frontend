@@ -1,0 +1,154 @@
+<page-header title="My Reviews"></page-header>
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="row" *ngIf="data.employee.employee.id">
+                        <div class="col-sm-12">
+                            <div class="box box-solid">
+                                <div class="box-body employee-details">
+                                    <h3 class="pull-right" style="margin-right:20px">{{data.reviewee.rating || 'N/A'}}</h3>
+                                    <img [src]="'/core/api/v1/images/'+data.employee.employee.image_id" style="float:left" class="img-md">
+                                    <ul style="list-style: none; padding-left: 75px;">
+                                        <li>Name: {{data.employee.employee.first_name}} {{data.employee.employee.last_name}}</li>
+                                        <li>Department: {{data.employee.department.name}}</li>
+                                        <li>Designation: {{data.employee.designation.name}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="box box-solid">
+                                <table class="table table-stripped">
+                                    <thead>
+                                        <tr>
+                                            <th>Average Review Score</th>
+                                            <th>Manager</th>
+                                            <th>Direct Report</th>
+                                            <th>Peers</th>
+                                            <th>Self</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>Overall</th>
+                                            <th>{{getAvgRating('Manager')}}</th>
+                                            <th>{{getAvgRating('Direct Report')}}</th>
+                                            <th>{{getAvgRating('Peer')}}</th>
+                                            <th>{{getAvgRating('Self')}}</th>
+                                        </tr>
+                                        <tr *ngFor="let c of data.categories">
+                                            <td>{{ c.title }}</td>
+                                            <td>{{getAvgRatingByCategory('Manager', c.id)}}</td>
+                                            <td>{{getAvgRatingByCategory('Direct Report', c.id)}}</td>
+                                            <td>{{getAvgRatingByCategory('Peer', c.id)}}</td>
+                                            <td>{{getAvgRatingByCategory('Self', c.id)}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="box box-solid" *ngFor="let item of data.questions | groupBy: 'category_id'">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">{{getCategory(item.key).title}}</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row" *ngFor="let q of item.value; let i = index;">
+                                        <div class="col-sm-7">
+                                            <p class="text-bold">{{i + 1}}. {{ q.title }}
+                                                <span *ngIf="reviewConfig.config.weightages_visible_employees != '0'">
+                                                    (
+                                                    <i class="fa fa-balance-scale"></i>:{{q.weight}})
+                                                </span>
+                                            </p>
+                                            <p style="margin-left: 15px">{{ q.description }}</p>
+                                        </div>
+                                        <div class="text-center">
+                                            <div class="col-sm-1">
+                                                <p>Manager</p>
+                                                <p class="text-green">{{getAvgRatingByQuestion('Manager', q.id)}}</p>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <p>Direct R.</p>
+                                                <p class="text-green">{{getAvgRatingByQuestion('Direct Report', q.id)}}</p>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <p>Peers</p>
+                                                <p class="text-green">{{getAvgRatingByQuestion('Peer', q.id)}}</p>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <p>Self</p>
+                                                <p class="text-green">{{getAvgRatingByQuestion('Self', q.id)}}</p>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <p>Total</p>
+                                                <p class="text-green">{{getTotalAverageByQuestion(q.id)}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="reviewConfig.config.review_comments_pro_cons != 0">
+                        <div class="col-sm-6">
+                            <div class="box box-solid">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">
+                                        Strengths And Good Traits
+                                    </h3> (Optional)
+                                </div>
+                                <div class="box-body">
+                                    <blockquote *ngFor="let c of getPcc('pros')">
+                                        {{ c }}
+                                    </blockquote>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="box box-solid">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">
+                                        Weaknesses Or Areas To Improve
+                                    </h3> (Optional)
+                                </div>
+                                <div class="box-body">
+                                    <blockquote *ngFor="let c of getPcc('cons')">
+                                        {{ c }}
+                                    </blockquote>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="reviewConfig.config.review_comments_pro_cons != 0">
+                        <div class="col-sm-12">
+                            <div class="box box-solid">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">
+                                        Additional Comment
+                                    </h3> (Optional)
+                                </div>
+                                <div class="box-body">
+                                    <blockquote *ngFor="let c of getPcc('comments')">
+                                        {{ c }}
+                                    </blockquote>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

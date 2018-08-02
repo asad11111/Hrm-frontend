@@ -1,0 +1,16 @@
+<div class="ibox">
+    <div class="ibox-title">
+        <h3>Leaves For {{year}}</h3>
+    </div>
+    <div class="ibox-content">
+        <canvas #donut height="200px"></canvas>
+        <div class="leave_stat">
+            <table class="table" >
+                <tr *ngFor="let d of pieData">
+                    <td>{{d.label}}</td>
+                    <td>{{d.value}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

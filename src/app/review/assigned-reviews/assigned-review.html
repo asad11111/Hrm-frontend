@@ -1,0 +1,168 @@
+<page-header title="Assigned Reviews"></page-header>
+
+<div class="info-box info-sticky-box">
+    <span class="info-box-icon bg-red">
+        <i class="fa fa-star"></i>
+    </span>
+    <div class="info-box-content">
+        <span class="info-box-number">{{averageRating()}}</span>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-content">
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="box box-solid">
+                                <div class="box-body employee-details">
+                                    <img [src]="'/core/api/v1/images/'+data.employee.employee.image_id" style="float:left" class="img-md">
+                                    <ul style="list-style: none; padding-left: 70px;">
+                                        <li>Name: {{data.employee.employee.first_name}} {{data.employee.employee.last_name}}</li>
+                                        <li>Department: {{data.employee.department.name}}</li>
+                                        <li>Designation: {{data.employee.designation.name}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12" *ngIf="data.categories.length !== 0">
+                            <box *ngFor="let item of data.questions | groupBy: 'category_id'">
+                                <div header>
+                                    <h3 class="box-title">{{ data.categories[item.key].title }}</h3>
+                                    <div class="pull-right">
+                                    </div>
+                                </div>
+                                <div body style="padding: 0 5px">
+                                    <form #f="ngForm" name="ratingForm">
+                                        <div *ngFor="let q of item.value; let qi = index;">
+                                            <div class="row mt-10">
+                                                <div class="col-sm-12">
+                                                    <span class="text-bold">
+                                                        {{ qi + 1 }}. {{q.title}}
+                                                        <span *ngIf="reviewConfig.config.weightages_visible_employees != '0'">
+                                                            (
+                                                            <i class="fa fa-balance-scale"></i>:{{q.weight}})
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div style="padding-left: 18px">
+                                                <div class="row mb-10 mt-10">
+                                                    <div class="col-sm-11">
+                                                        {{q.description}}
+                                                    </div>
+                                                    <div class="col-sm-1">
+                                                        <div *ngIf="data.reviewer.status == 2">
+                                                            <span style="font-size: 1.2em" class="text-green">
+                                                                {{ data.answers[q.id].answer || 'N/A' }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-10" *ngIf="data.reviewer.status !== 2">
+                                                    <div class="col-sm-10">
+                                                        <div class="radio radio-inline radio-primary" *ngFor="let s of scores">
+                                                            <input type="radio" *ngIf="data.answers[q.id]" [value]="s" [name]="q.id" [ngModelOptions]="{standalone: true}" [(ngModel)]="data.answers[q.id].answer">
+                                                            <label>{{ s == 0 ? 'N/A' : s}}</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <div class="pull-right">
+                                                            <a (click)="toggleComment($event, data.answers[q.id])" href="" class="comment-link">
+                                                                Write Comment
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-10">
+                                                    <div class="col-md-12">
+                                                        <div *ngIf="data.reviewer.status !== 2">
+                                                            <textarea class="form-control" [(ngModel)]="data.answers[q.id].comments" [ngModelOptions]="{standalone: true}" [name]="q.id + '_comments'"
+                                                                placeholder="Comment" *ngIf="data.answers[q.id].comments != null"
+                                                                rows="2">
+                                                                    </textarea>
+                                                        </div>
+                                                        <p class="text-muted review-question-comments" *ngIf="data.reviewer.status == 2">
+                                                            {{ data.answers[q.id].comments }}
+                                                        </p>
+                                                    </div>
+                                                    <!--<div class="col-md-6"></div>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </box>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="reviewConfig.config.review_comments_pro_cons != '0'">
+                        <div class="col-sm-6">
+                            <div class="box box-solid">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">
+                                        Strengths And Good Traits
+                                    </h3> (Optional)
+                                </div>
+                                <div class="box-body">
+                                    <textarea class="form-control" rows="5" name="pros" [readonly]="data.reviewer.status == 2" [(ngModel)]="data.reviewer.pros"
+                                        [ngModelOptions]="{standalone: true}"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="box box-solid">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">
+                                        Weaknesses Or Areas To Improve
+                                    </h3> (Optional)
+                                </div>
+                                <div class="box-body">
+                                    <textarea class="form-control" name="cons" rows="5" [readonly]="data.reviewer.status == 2" [(ngModel)]="data.reviewer.cons"
+                                        [ngModelOptions]="{standalone: true}"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="reviewConfig.config.review_comments_pro_cons != '0'">
+                        <div class="col-sm-12">
+                            <div class="box box-solid">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">
+                                        Additional Comment
+                                    </h3> (Optional)
+                                </div>
+                                <div class="box-body">
+                                    <textarea class="form-control" rows="5" name="comments" [readonly]="data.reviewer.status == 2" [(ngModel)]="data.reviewer.comments"
+                                        [ngModelOptions]="{standalone: true}"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div style="padding-top:15px;"  class="col-sm-12">
+                            <div class="pull-right" *ngIf="data.reviewer.status !== 2">
+                                <btn type="primary" icon="fa fa-envelope" (click)="saveAsDraft()">
+                                    Save As Draft
+                                </btn>
+                                <btn type="primary" icon="fa fa-check" (click)="save()">
+                                    Submit
+                                </btn>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<confirm #confirm></confirm>
+<alert #alert></alert>

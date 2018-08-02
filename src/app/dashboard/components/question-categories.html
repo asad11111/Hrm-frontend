@@ -1,0 +1,15 @@
+<div class="ibox question-categories">
+    <div class="ibox-title">
+        <h5>Question Categories</h5>         
+    </div>
+    <div style="background: #FFF">
+
+        <table class="table table-bordered">
+            <tr    *ngFor="let d of loadList(performData);"  >
+                <td><span class="fa fa-circle question-categories-bullet"></span></td>
+                <td>{{d.title}}</td>
+                <td>  <span class="text-info"> {{d.totalquestions}} </span>  </td>
+            </tr>            
+        </table>
+    </div>
+</div>

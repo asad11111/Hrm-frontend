@@ -1,0 +1,104 @@
+<page-header title="Dashboard"></page-header>
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="row">
+                <div class="col-lg-12">
+                    <dashboard-stats-item title="Total Departments"
+                                          [fig]="data.totalDepartments"
+                                          [label]="'Monthly'"
+                                          [bg]="'#0292E3'"
+                                          [percentage]="''"
+                                          [icon]="['sprite', 'sprite-dashboard-total-departments']">
+                    </dashboard-stats-item>
+                </div>
+            </div>
+            <div class="row" *ngIf="auth.hasModule('Attendance')">
+                <div class="col-lg-12">
+                    <clock-in-out [data]="data.latestClock"></clock-in-out>
+                </div>
+            </div>
+            <div class="row" *ngIf="auth.hasModule('Review')">
+                <div class="col-lg-12">
+                    <reviews-pie [performData]="reviewStates" ></reviews-pie>
+                </div>
+            </div>
+            <div class="row" *ngIf="auth.hasModule('Attendance')">
+                <div class="col-lg-12">
+                    <calendar></calendar>
+                </div>
+            </div>
+            <div class="row" *ngIf="auth.hasModule('Review')">
+                <div class="col-lg-12">
+                    <question-categories [performData]="reviewStates['question-categories']"  ></question-categories>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="row">
+                <div class="col-lg-12">
+                    <dashboard-stats-item title="Total Employees"
+                                          [bg]="'#23C6C8'"
+                                          [fig]="data.totalEmployees"
+                                          [label]="'Annual'"
+                                          [percentage]="''"
+                                          [icon]="['sprite', 'sprite-dashboard-total-employees']">
+                    </dashboard-stats-item>
+                </div>
+            </div>
+            <div class="row" *ngIf="auth.hasModule('Attendance')">
+                <div class="col-lg-12">
+                    <attendance-pie [data]="data.attendance"
+                                    (fetchData)="fetchAttendanceDonut($event)"
+                    >
+                    </attendance-pie>
+                </div>
+            </div>
+            <div class="row" *ngIf="auth.hasModule('Attendance')">
+                <div class="col-lg-12">
+                    <upcoming-leaves [data]="data.leaves"></upcoming-leaves>
+                </div>
+            </div>
+            <div class="row" *ngIf="auth.hasModule('Attendance')">
+                <div class="col-lg-12">
+                    <top-avg-time [data]="data.topAvgTime"></top-avg-time>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="row">
+                <div class="col-lg-12">
+                    <dashboard-stats-item title="System Activities"
+                                          [fig]="data.systemActivities"
+                                          [bg]="'#1AB394'"
+                                          [label]="'Today'"
+                                          [percentage]="'80%'"
+                                          [icon]="['sprite', 'sprite-dashboard-system-activities']">
+                    </dashboard-stats-item>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12" *ngIf="auth.hasModule('Attendance')">
+                    <office-timing [data]="data.officeTimeShift"></office-timing>
+                </div>
+            </div>
+            <div class="row" *ngIf="auth.hasModule('Attendance')">
+                <div class="col-lg-12">
+                    <recent-clocks [data]="data.recentClocks"
+                                   (fetchRecentClocks)="fetchRecentClocks($event)">
+                    </recent-clocks>
+                </div>
+            </div>
+            <div class="row" *ngIf="auth.hasModule('Review')">
+                <div class="col-lg-12">
+                    <top-performers [performData]="reviewStates['top-performers']"  ></top-performers>
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+</div>

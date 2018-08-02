@@ -1,0 +1,55 @@
+<modal [show]="designation != null"
+       (hide)="onHide.emit()"
+       title="Add Designation">
+
+  <div *ngIf="designation != null" body>
+
+    <errors [errors]="errors"></errors>
+
+    <form class="department-form">
+
+      <div class="form-group">
+        <label>Name</label>
+        <input [(ngModel)]="designation.name"
+                type="text" class="form-control " name="designation" >
+      </div>
+
+      <!--<div class="form-group">-->
+        <!--<label>Department</label>-->
+        <!--<select class="form-control"-->
+                <!--[(ngModel)]="designation.department_id"-->
+                <!--name="department_id">-->
+          <!--<option *ngFor="let d of departments" [value]="d.id">{{d.name}}</option>-->
+        <!--</select>-->
+      <!--</div>-->
+
+      <!--<div class="form-group">-->
+        <!--<label>Parent Designation</label>-->
+        <!--<select [(ngModel)]="designation.parent_id"-->
+                <!--class="form-control" name="parent_id" id="parent_id" >-->
+          <!--<option *ngFor="let d of designations" [value]="d.id">{{d.name}}</option>-->
+        <!--</select>-->
+      <!--</div>-->
+
+
+      <div *ngIf="this.auth.hasModule('Review')==true" class="form-group">
+        <label>Review Template</label>
+        <select [(ngModel)]="designation.review_template_id"
+                class="form-control" name="review_template" id="review_template" >
+          <option *ngFor="let d of review_templates" [value]="d.id">{{d.title}}</option>
+        </select>
+      </div>
+
+
+
+      
+    </form>
+  </div>
+  <btn type="primary"
+       footer
+       (click)="save()"
+       [busy]="creating"
+       icon="fa fa-check-circle-o">
+    Add
+  </btn>
+</modal>

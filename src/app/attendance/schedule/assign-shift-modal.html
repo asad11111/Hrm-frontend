@@ -1,0 +1,52 @@
+<modal [show]="shift != null"
+       (hide)="onHide.emit()"
+       title="Assign Shift">
+    <div body>
+        <errors [errors]="errors"></errors>
+        <form name="assignShiftModal" *ngIf="shift">
+            <div class="form-group">
+                <label>Employee</label>
+                <select2 [src]="'/core/api/v1/employees/list'"
+                         [(value)]="shift.employee_id"
+                         [format]="'{first_name} {last_name}'">
+                </select2>
+                <!--<select class="form-control"-->
+                        <!--[(ngModel)]="shift.employee_id"-->
+                        <!--name="employee_id">-->
+                    <!--<option [value]="e.id"-->
+                            <!--*ngFor="let e of employees">-->
+                        <!--{{ e.first_name }} {{ e.last_name }}-->
+                    <!--</option>-->
+                <!--</select>-->
+            </div>
+            <div class="form-group">
+                <label>Shift</label>
+                <select class="form-control"
+                        [(ngModel)]="shift.shift_id"
+                        name="employee_id">
+                    <option [value]="s.id"
+                            *ngFor="let s of shifts">
+                        {{ s.name }}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>State Date</label>
+                <datepicker [(value)]="shift.started_on">
+                </datepicker>
+            </div>
+            <div class="form-group" >
+                <label>End Date</label>
+                <datepicker [(value)]="shift.ended_on">
+                </datepicker>
+            </div>
+        </form>
+    </div>
+    <div footer>
+        <button class="btn btn-primary"
+                (click)="save()">
+            <i class="fa fa-check-circle-o"></i>
+            Assign
+        </button>
+    </div>
+</modal>

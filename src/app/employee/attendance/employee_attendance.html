@@ -1,0 +1,103 @@
+<section class="content-header">
+    <h1>
+        Attendance
+        <small class="text-bold">
+            {{employee.first_name}} {{employee.last_name}} - ({{designation.name}})
+        </small>
+    </h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h3><strong>Select Month & Year</strong></h3>
+                </div>
+                <div class="ibox-content clearfix">
+                    <form>
+                        <div class="form-group col-sm-9">
+                            <label class="col-sm-3 ">Shift</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" [(ngModel)]="shift_id" name="shift_id">
+                                    <option *ngFor="let s of shifts" [value]="s.id">
+                                        {{s.name}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!--<div class="form-group col-sm-9">-->
+                            <!--<label class="col-sm-3 ">Employee</label>-->
+                            <!--<div class="col-sm-9">-->
+                                <!--<input class="form-control" type="text" [value]="employee.first_name +' '+employee.last_name" readonly="true">-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+                        <div class="form-group col-sm-9">
+                            <label class="col-sm-3">Month</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" name="month" [(ngModel)]="month">
+                                    <option *ngFor="let m of months; let i = index;" [value]="i + 1">{{ m }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-9">
+                            <label class="col-sm-3 ">Year</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" name="year" [(ngModel)]="year">
+                                    <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-2">
+                            <button class="btn btn-primary btn-block"
+                                    (click)="fetch()"
+                                    [disabled]="!(employee_id && shift_id)"
+                            >Get</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="fetched">
+        <div class="col-sm-8">
+            <box [busy]="fetching">
+                <div header>
+                    <span class="pull-right">
+                        Total Worked: <span class="text-bold">{{  minutesToReadable(report.totalWorked) }}</span>
+                    </span>
+                    <h3><strong>Attendance {{ months[month - 1] }}, {{ year }}</strong></h3>
+                </div>
+                <div class="ibox-content clearfix" body>
+                    <table class="table table-stripped">
+                        <thead>
+                        <tr>
+                            <td>Date</td>
+                            <td>Status</td>
+                            <td>Hours Worked</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let a of report.attendance">
+                            <td>
+                                {{ a.date | date: 'mediumDate' }}
+                            </td>
+                            <td>
+                                <span class="label" [ngClass]="getStatusLabelClass(a.status)">
+                                    {{ a.status }}
+                                </span>
+                            </td>
+                            <td>
+                                {{ minutesToReadable(a.worked) }}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </box>
+        </div>
+    </div>
+</section>

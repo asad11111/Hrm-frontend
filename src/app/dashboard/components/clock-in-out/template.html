@@ -1,0 +1,29 @@
+<box>
+   <div header>
+       <div class="pull-right">
+           <btn [type]="'success'"
+                [busy]="clocking"
+                [size]="'xs'"
+                icon="fa fa-sign-in"
+                *ngIf="!(data) || data?.out_at"
+                (click)="clockIn()"
+           >Clock In
+           </btn>
+           <btn [type]="'danger'"
+                [busy]="clocking"
+                [size]="'xs'"
+                icon="fa fa-sign-out"
+                *ngIf="data && data?.out_at == null"
+                (click)="clockOut()"
+           >Clock Out
+           </btn>
+       </div>
+       <h5>Attendance</h5>
+   </div>
+    <div class="ibox-content clearfix" body>
+        <h1 class="text-center">
+            {{ data?.out_at || data?.in_at | local | date: 'short' }}
+        </h1>
+    </div>
+
+</box>

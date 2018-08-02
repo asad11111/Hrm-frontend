@@ -1,0 +1,42 @@
+.list-style-none,.list-style-none li{
+    list-style: none;
+}
+
+.text-bold{
+    font-weight: bold;
+}
+.text-cross{
+    text-decoration: line-through;
+}
+.datepicker-orient-top{
+    z-index: 9999;
+}
+.cursor-point{
+    cursor: pointer;
+}
+
+.info-sticky-box .info-box-content{
+    background: #fff;
+    font-weight: bold;
+} 
+
+.info-sticky-box .info-box-icon {
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 24px;
+    float: left;
+    padding: 5px 11px;
+}
+
+.info-sticky-box .bg-red {
+    background-color: #dd4b39 !important;
+}
+
+.left-pad-none{
+    padding-left: 0px;
+}
+
+.padding-b-50{
+    padding-bottom: 50px;
+}

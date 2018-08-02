@@ -1,0 +1,92 @@
+<page-header title="Modules"></page-header> 
+<div class="wrapper wrapper-content  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox">
+        <div class="ibox-title">
+          <h5 class="box-title">manage modules</h5>           
+        </div>
+        <div class="ibox-content">
+
+  <div class="row">
+        <div class="col-sm-4">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    Companies
+                </div>
+                <div class="box-body">
+                    <div class="form-group">
+                        <label>Company</label>
+                        <select class="form-control"
+                                (change)="fetchModules($event.target.value)"
+                                [(ngModel)]="company_id">
+                            <option *ngFor="let c of companies" [value]="c.id">
+                                {{c.name}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    Modules
+                </div>
+                <div class="box-body">
+                     <table class="table table-stripped">
+                         <thead>
+                         <tr>
+                             <th>Name</th>
+                             <th>Status</th>
+                             <th>Installed</th>
+                         </tr>
+                         </thead>
+                         <tbody>
+                         <tr *ngFor="let m of modules">
+                             <td>{{m.name}}</td>
+                             <td>
+                                 <div [ngSwitch]="isInstalled(m.id)">
+                                     <button class="btn btn-primary btn-xs" *ngSwitchCase="true" [disabled]="m.id == 1">
+                                         {{ isActive(m.id) ? 'Enable':'Disable'}}
+                                     </button>
+                                     <span *ngSwitchCase="false">Not Installed</span>
+                                 </div>
+                             </td>
+                             <td>
+                                 <div [ngSwitch]="isInstalled(m.id)">
+                                     <btn type="primary"
+                                          size="xs"
+                                          *ngSwitchCase="false"
+                                          (click)="installModule(m)"
+                                          [busy]="m.installing">
+                                         <i class="fa fa-arrow-down"></i>
+                                         Install
+                                     </btn>
+                                     <btn type="primary"
+                                          size="xs"
+                                          *ngSwitchCase="true"
+                                          (click)="uninstallModule(m.id)"
+                                          [disabled]="m.id == 1">
+                                         <i class="fa fa-remove"></i>
+                                         Uninstall
+                                     </btn>
+                                 </div>
+                             </td>
+                         </tr>
+                         </tbody>
+                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

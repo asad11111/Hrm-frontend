@@ -1,0 +1,80 @@
+<page-header title="Review templates"></page-header>
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+  <div class="row">
+      <div class="ibox">
+        <div class="ibox-title">
+          <h5 class="box-title">Reviews</h5>
+          <div class="pull-right" >
+            <button  *ngIf="permission.can('Review.create_review_template')"
+             class="btn btn-primary btn-xs" (click)="open_review_template()" ><i class="fa fa-plus" ></i>  Create new review template</button>              
+          </div>
+        </div>
+        <div class="ibox-content">
+           <table class="table table-bordered">
+         <thead>
+           <tr>
+             <th>Title</th>
+             <th>Description</th>
+             <th>Status</th>
+             <th>Actions</th>
+           </tr>
+         </thead>
+         <tbody>
+           <tr *ngFor="let d of review_templates.data" id="review_template_{{d.id}}" >
+             <td >{{ d.title }}</td>
+             <td>{{ d.description || '...'}}</td>
+             <td>  <button  *ngIf="d.status" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-ok"></i></button> 
+                   <button *ngIf="d.status==false" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-ban-circle"></i></button> </td>
+             <td>
+               <button (click)="del_review_template(d)" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i></button> 
+               <button (click)="edit_review_template(d)" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i></button>
+               <a *ngIf="d.status==true" routerLink="/review/reviews/review-templates/{{d.id}}" class="btn btn-xs btn-success" title="Add questions to template" ><i class="glyphicon glyphicon-plus-sign"></i></a>            
+               </td>
+           </tr>
+         </tbody>
+       </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+ 
+<div bsModal [config]="{backdrop: false}" class="modal fade" #review_template_form="bs-modal" id="review_template_form">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" (click)="review_template_form.hide()" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Review template</h4>
+			</div>
+			<div class="modal-body">
+				<errors [errors]="errors"></errors>
+				<div class="form-group">
+					<label>Review template title</label>
+          <input placeholder="Review template title" class="form-control" [(ngModel)]="review_template.title" id="title" name="title"   >
+				</div>
+        <div class="form-group">
+					<label>Review template description</label>
+					<textarea [(ngModel)]="review_template.description"  placeholder="review template description" class="form-control summernote-small" name="description"></textarea>
+				</div>
+        <div class="form-group">
+					<label>Status</label>					 
+          <select  [(ngModel)]="review_template.status" id="status" name="status" class="form-control" >
+            <option value="1"> Active </option>
+            <option value="0"> Disable </option>
+          </select>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" (click)="save_review_template()" class="btn btn-primary">{{review_template_btn}}</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<confirm #confirmreviewer></confirm>
+<alert #alertpoup></alert>

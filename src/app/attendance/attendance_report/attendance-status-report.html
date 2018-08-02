@@ -1,0 +1,70 @@
+<div class="row">
+    <div class="col-lg-3">
+        <div class="form-group">
+            <label>Departments</label>
+            <select class="form-control" [(ngModel)]="department_id" name="department_id">
+                <option [value]="d.id" *ngFor="let d of departments">{{d.name}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="form-group">
+            <label>Employees</label>
+            <select [value]="employee_id"
+                    [(ngModel)]="employee_id"
+                    name="employee_id"
+                    class="form-control"
+            >
+                <option [value]="e.id" *ngFor="let e of employees">
+                    {{e.first_name}}
+                </option>
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="form-group">
+            <label>From</label>
+            <datepicker [(value)]="start_date"></datepicker>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="form-group">
+            <label>Till</label>
+            <div style="display: flex;">
+                <datepicker [(value)]="end_date"></datepicker>
+                <button class="btn btn-primary"
+                        style="margin-left: 10px"
+                        (click)="fetchReport()">
+                    Search
+                </button>
+                <button class="btn btn-success"
+                        style="margin-left: 10px"
+                        (click)="toCsv()"
+                        [disabled]="!fetched"
+                ><i class="fa fa-file-excel-o"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <spinner *ngIf="fetching"></spinner>
+        <div class="table table-responsive" *ngIf="fetched && !fetching">
+            <table class="table table-bordered" #table>
+                <tr>
+                    <th></th>
+                    <th *ngFor="let d of dateRange">{{d}}</th>
+                </tr>
+                <tr *ngFor="let e of data.employees">
+                    <td>{{e.first_name}} {{e.last_name}}</td>
+                    <td *ngFor="let o of data.report[e.id] | keyVal">
+                        <small class="label label-primary" *ngIf="o.value.status === 'Present'">Present</small>
+                        <small class="label label-danger" *ngIf="o.value.status === 'Absent'">Absent</small>
+                        <small class="label label-info" *ngIf="o.value.status === 'OffDay'">{{o.value.day}}</small>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,86 @@
+<modal [show]="leave != null"
+       (hide)="onHide.emit()"
+       title="Submit Application">
+    <div body>
+        <errors [errors]="errors"></errors>
+        <form name="leaveForm" *ngIf="leave">
+            <div class="form-group">
+                <label>From</label>
+                <select2 [src]="'/core/api/v1/employees/list'"
+                         [format]="'{first_name} {last_name}'"
+                         [(value)]="leave.submitted_by"
+                         [disabled]="leave.id"
+                >
+                </select2>
+            </div>
+            <div class="form-group">
+                <label>Type</label>
+                <select *ngIf="auth.hasModule('NZ-Payroll')" class="form-control" [(ngModel)]="leave.type_id" name="type_id">
+                    <option *ngFor="let l of leaveTypes" [value]="l.id">
+                        {{l.name}} {{(l.employee_type == 1) ? '-> Permanent' : ' -> Casual'}}
+                    </option>
+                </select>
+                <select *ngIf="!auth.hasModule('NZ-Payroll')" class="form-control" [(ngModel)]="leave.type_id" name="type_id">
+                    <option *ngFor="let l of leaveTypes" [value]="l.id">
+                        {{l.name}}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Subject</label>
+                <input type="text"
+                       name="subject"
+                       class="form-control"
+                       [(ngModel)]="leave.subject">
+            </div>
+            <div class="form-group">
+                <label>Submit To </label>
+                <multi-select2 [src]="'/core/api/v1/employees/list'"
+                               [format]="'{first_name} {last_name}'"
+                               [params]="{except: current_employee_id}"
+                               [(value)]="leave.submitted_to"
+                >
+                </multi-select2>
+            </div>
+            <div class="form-group">
+                <label>Status <span></span></label>
+                <select name="status"
+                        class="form-control"
+                        [(ngModel)]="leave.status">
+                    <option value="1">Approved</option>
+                    <option value="2">Rejected</option>
+                    <option value="0">Pending</option>
+                </select>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <datepicker [(value)]="leave.start_date"></datepicker>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <datepicker [(value)]="leave.end_date"></datepicker>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Text</label>
+                <textarea class="form-control"
+                          name="text"
+                          [(ngModel)]="leave.text"
+                          rows="5">
+                </textarea>
+            </div>
+        </form>
+    </div>
+    <div footer>
+        <button class="btn btn-primary"
+                (click)="save()">
+            <i class="fa fa-check-circle-o"></i>
+            Submit
+        </button>
+    </div>
+</modal>

@@ -1,0 +1,150 @@
+<page-header title="Reviews Section"></page-header>
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="row" *ngIf="fetched && data.reviewers.length == 0">
+                        <div class="col-sm-12">
+                            <div class="box box-solid">
+                                <div class="box-body text-center">
+                                    <h4>No one has reviewed you yet</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="fetched && data.reviewers.length !== 0">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="box box-solid">
+                                    <div class="box-body">
+                                        <div class="form-inline">
+                                            <div class="form-group">
+                                                <label>Filter:</label>
+                                                <select class="form-control" [(ngModel)]="filter">
+                                                    <option value="all">All</option>
+                                                    <option value="pending">Pending</option>
+                                                    <option value="completed">Completed</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group" style="vertical-align: middle">
+                                                <label>Group By:</label>
+                                                <div class="radio radio-inline radio-primary">
+                                                    <input type="radio" name="group" [(ngModel)]="groupBy" value="period">
+                                                    <label>Review Period</label>
+                                                </div>
+                                                <div class="radio radio-inline radio-primary">
+                                                    <input type="radio" name="group" [(ngModel)]="groupBy" value="employee">
+                                                    <label>Employee</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" *ngIf="data.reviewers.length !== 0">
+
+                                <div *ngIf="groupBy == 'employee'">
+                                    <box *ngFor="let re of data.reviewees | values">
+                                        <div header>
+                                            <h3 class="box-title">
+                                                {{ data.employees[re.for_employee_id].first_name }} {{ data.employees[re.for_employee_id].last_name }}
+                                            </h3>
+                                            <div class="pull-right">
+                                            </div>
+                                        </div>
+                                        <div body>
+                                            <table class="table table-stripped" style="table-layout: fixed">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Deadline</th>
+                                                        <th>Reviewed As</th>
+                                                        <th>Status</th>
+                                                        <th>Rating</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let r of filterReviewersForReviewee(re.id)">
+                                                        <td>
+                                                            <a [routerLink]="[r.id]">
+                                                                {{ data.reviews[r.review_id].title }}
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            {{data.reviews[r.review_id].deadline}}
+                                                        </td>
+                                                        <td>
+                                                            {{data.reviewer_types[r.type_id].title}}
+                                                        </td>
+                                                        <td>
+                                                            {{status[r.status]}}
+                                                        </td>
+                                                        <td>
+                                                            {{r.rating || '...'}}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </box>
+                                </div>
+
+
+                                <div *ngIf="groupBy == 'period'">
+                                    <box *ngFor="let re of data.reviews | values">
+                                        <div header>
+                                            <h3 class="box-title">{{re.title}}</h3>
+                                            <div class="pull-right">
+                                            </div>
+                                        </div>
+                                        <div body>
+                                            <table class="table table-stripped" style="table-layout: fixed">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Deadline</th>
+                                                        <th>Reviewed As</th>
+                                                        <th>Status</th>
+                                                        <th>Rating</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let r of filterReviewersForReview(re.id)">
+                                                        <td>
+                                                            <a [routerLink]="[r.id]">
+                                                                {{ data.employees[data.reviewees[r.reviewee_id].for_employee_id].first_name }} {{ data.employees[data.reviewees[r.reviewee_id].for_employee_id].last_name
+                                                                }}
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            {{data.reviews[r.review_id].deadline}}
+                                                        </td>
+                                                        <td>
+                                                            {{data.reviewer_types[r.type_id].title}}
+                                                        </td>
+                                                        <td>
+                                                            {{status[r.status]}}
+                                                        </td>
+                                                        <td>
+                                                            {{r.rating || '...'}}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </box>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

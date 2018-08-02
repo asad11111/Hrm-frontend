@@ -1,0 +1,184 @@
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <box [busy]="false">
+                <div header>
+                    <div class="pull-right">
+                        <button class="btn btn-primary btn-xs"
+                                [popover]="filterPopover"
+                                placement="bottom"
+                                [isOpen]="state.showPopover"
+                                (onHidden)="store.showFilterPopover()"
+                                (onShown)="store.showFilterPopover()"
+                                [outsideClick]="true"
+                        >
+                            <i class="fa fa-filter"></i> <span class="hidden-xs"> Filter</span>
+                        </button>
+                        <a class="btn btn-primary btn-xs" routerLink="/employees/tree">
+                            <i class="fa fa-tree"></i> <span class="hidden-xs">Tree</span>
+                        </a>
+                        <button class="btn btn-primary btn-xs"
+                                (click)="store.newEmployee()"
+                                *ngIf="permission.can('Core.manage_employees')">
+                            <i class="fa fa-plus"></i> <span class="hidden-xs">Add</span>
+                        </button>
+                        <a class="btn btn-primary btn-xs"
+                           routerLink="/employees/import"
+                           *ngIf="permission.can('Core.manage_employees')">
+                            <i class="fa fa-download"></i> <span class="hidden-xs"> Import</span>
+                        </a>
+                    </div>
+                    <h3 class="box-title">Employees</h3>
+                </div>
+                <div class="ibox-content clearfix" body>
+                    <h2 *ngIf="state.response.fetched && state.response.data.employees.length === 0"
+                        class="text-center">
+                        No Employees Found
+                    </h2>
+                    <table class="table table-stripped"
+                           *ngIf="state.response.fetched && !state.response.fetching && state.response.data.employees.length > 0">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Department</th>
+                            <th>Designation</th>
+                            <th>Joining Date</th>                            
+                            <th>Actions <span *ngIf="permission.can('Core.manage_employees')">| GeoFence</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let e of state?.response.data.employees">
+                            <td>
+                                <img [src]="getPicUrl(e)" class="img-circle" style="width: 30px">
+                            </td>
+                            <td data-label="Name">
+                                    <div title="ex-employee"  [class]="empStatus(e)" ></div>
+                                    <div title="Logged in"  *ngIf="e.logged_today==1"  class="active_employee"></div>
+                                    <a [routerLink]="['/', 'employees', e.id]">
+                                    {{ e.first_name }} {{ e.last_name }}
+                                </a>
+                                <br>                                
+                                <small *ngIf="e.emp_status==2" >{{empDetails(e)}} , Updated at: {{ (e.updated_at | date: 'mediumDate') || '...'}} </small>
+                            </td>
+                            <td data-label="Email">{{ state.response.data.users[e.user_id]?.email }}</td>
+                            <td data-label="Department">{{ state.response.data.departments[e.department_id]?.name }}</td>
+                            <td data-label="Designation">{{ state.response.data.designations[e.designation_id]?.name }}</td>
+                            <td data-label="Date Of Joining">{{ (e.date_of_joining | date: 'mediumDate') || '...'}}</td>
+                            <td data-label="Actions">
+                                <div class="btn-group" dropdown>
+                                    <button type="button" class="btn btn-default btn-xs" dropdownToggle>
+                                        <i class="fa fa-cog"></i>
+                                    </button>
+                                    <ul *dropdownMenu class="dropdown-menu dropdown-menu-right">
+                                        <li *ngIf="permission.can('Core.manage_employees')">
+                                            <a class="dropdown-item" (click)="store.editEmployee(e, state.response.data.users[e.user_id])"><i class="fa fa-edit"></i> Edit</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item"
+                                               *ngIf="auth.hasModule('Attendance') && permission.can('Attendance.manage_attendance')"
+                                               [routerLink]="['/employees', e.id, 'leaves']"
+                                            >
+                                                <i class="fa fa-plane"></i> Leaves
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" *ngIf="auth.hasModule('Attendance')" 
+                                            [routerLink]="['/attendance/reports',{employeeId: e.id,date: currentDate}]">
+                                                <i class="fa fa-clock-o"></i> Attendance
+                                            </a>
+                                        </li>
+                                        <!-- <li *ngIf="permission.can('Core.manage_employees') && state.response.data.designations[e.designation_id].name != 'CEO' ">
+                                            <a class="dropdown-item" (click)="store.setDeleteEmployee(e)">
+                                                <i class="fa fa-trash"></i>
+                                                Delete
+                                            </a>
+                                        </li> -->
+                                        <li *ngIf="permission.can('Core.manage_employees') && state.response.data.designations[e.designation_id].name != 'CEO' ">
+                                            <a  class="dropdown-item" >
+                                                <i class="fa fa-ban"></i>
+                                                Deactivate employee.
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <button title="Clock In"  (click)="clock(e,'i')"  class="btn btn-xs btn-primary" 
+                                *ngIf="clocked(state.response.data.attendance,e.id,'i') && checkManager(e,state.response.data.designations[e.designation_id])" > <i class="fa fa-clock-o" ></i> </button>
+                                <button title="Clock Out" (click)="clock(e,'o')"  class="btn btn-xs btn-danger"
+                                 *ngIf="clocked(state.response.data.attendance,e.id,'o') && checkManager(e,state.response.data.designations[e.designation_id])" > <i class="fa fa-clock-o" ></i> </button>
+                                
+                                <div title="GEO Fence" class="geo_fence_button" *ngIf="permission.can('Core.manage_employees')">
+                                    | 
+                                    <label class="switch">
+                                        <input type="checkbox" [checked]="e.geo_fence == 1" (click)="change_geo_fence(e.id)">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </td>
+                           
+                           
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="pull-right">
+                        <div class="pull-left pagination-desc">
+                            Showing {{state.response.from}} to {{state.response.to}} of {{state.response.total}}
+                        </div>
+                        <pagination
+                                [page]="state.response.current_page"
+                                (pageChange)="store.fetchEmployees($event,[])"
+                                [perPage]="state.response.per_page"
+                                [items]="state.response.total"
+                                [show]="5" >
+                        </pagination>
+                    </div>
+                </div>
+            </box>
+        </div>
+    </div>
+</div>
+
+
+<template #filterPopover>
+    <div class="form-group">
+        <label>Search</label>
+        <input type="text" class="form-control" [(ngModel)]="state.filters.q">
+    </div>
+    <div class="form-group">
+        <label>Gender</label>
+        <select class="form-control" [(ngModel)]="state.filters.gender">
+            <option value="">All</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Department</label>
+        <select2 [src]="'/core/api/v1/departments/list'"
+                 [(value)]="state.filters.department_id"
+                 [allowClear]="true"
+        >
+        </select2>
+    </div>
+    <div class="form-group">
+        <label>Designation</label>
+        <select2 [src]="'/core/api/v1/designations/list'"
+                 [(value)]="state.filters.designation_id"
+                 [allowClear]="true"
+        >
+        </select2>
+    </div>
+    <div class="form-group">
+            <label>Employee status</label>
+            <select class="form-control" [(ngModel)]="state.filters.emp_status"  >
+                    <option value="all" > All </option>
+                    <option value="1" > Active </option>
+                    <option value="2" > Inactive </option>
+            </select>
+        </div>
+    <button class="btn btn-block btn-primary" (click)="store.fetchEmployees(1, 15)">
+        Filter
+    </button>
+</template>
+

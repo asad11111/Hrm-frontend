@@ -1,0 +1,112 @@
+<page-header title="Employee Salaries"></page-header>
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel">
+                <div class="panel-body">
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <label>Filter:</label>
+                            <select class="form-control"
+                                    name="show"
+                                    [(ngModel)]="filter.show"
+                                    (change)="fetchData(1)">
+                                <option value="all">All</option>
+                                <option value="not_set">Not Set</option>
+                            </select>
+                        </div>
+                        <div class="form-group" >
+                            <label>Search:</label>
+                            <input placeholder="Search"
+                                   class="form-control"
+                                   [(ngModel)]="filter.search"
+                                   #search>
+                        </div>
+                        <div class="pull-right">
+                            <button class="btn btn-primary btn-sm" (click)="showImportModal = true">
+                                <i class="fa fa-upload"></i>
+                                Import CSV
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel" *ngIf="res.fetching">
+                <div class="panel-body">
+                    <spinner></spinner>
+                </div>
+            </div>
+            <div id="employee-salaries">
+                <panel *ngFor="let e of res.data?.employees">
+                    <div title class="text-bold">
+                    <span>
+                        {{e.first_name}} {{e.last_name}} -
+                        Net Salary :
+                        {{ getNetSalary(res.data.salaries[e.id]) }}
+                    </span>
+                    </div>
+                    <div header>
+                        <div class="pull-right">
+                            <button class="btn btn-primary btn-xs no-panel-event" (click)="newSalary(e.id)">
+                                <i class="fa fa-plus"></i>  Add Salary
+                            </button>
+                        </div>
+                    </div>
+                    <div body>
+                        <h2 *ngIf="!res.data.salaries[e.id]" class="text-center" style="margin:0 0 10px 0">
+                            No salaries has been set
+                        </h2>
+                        <table class="table text-center" *ngIf="res.data.salaries[e.id]">
+                            <tr>
+                                <td>Type</td>
+                                <td>Salary</td>
+                                <td>Actions</td>
+                            </tr>
+                            <tr *ngFor="let s of res.data?.salaries[e.id]">
+                                <td>{{s.type}}</td>
+                                <td>{{s.salary}}</td>
+                                <td>
+                                    <button class="btn btn-default btn-xs"
+                                            (click)="editSalary(s)"
+                                    ><i class="fa fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-xs"
+                                            (click)="destroy(s)"
+                                    >
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </panel>
+            </div>
+            <div class="pull-right">
+                <div class="pull-left pagination-desc">
+                    Showing {{res.from}} to {{res.to}} of {{res.total}}
+                </div>
+                <pagination [items]="res.total"
+                            [perPage]="res.per_page"
+                            [page]="res.current_page"
+                            (pageChange)="fetchData($event)">
+                </pagination>
+            </div>
+        </div>
+    </div>
+</div>
+
+<employee-salary-modal [salary]="salary"
+                       (onCreate)="onCreate($event)"
+                       (onUpdate)="onUpdate($event)"
+                       (onHide)="salary = null">
+</employee-salary-modal>
+
+<salaries-import-modal [show]="showImportModal"
+                       (onHide)="showImportModal = false"
+                       (onDone)="onBulkImport()"
+>
+</salaries-import-modal>
+
+<confirm #confirm>
+</confirm>

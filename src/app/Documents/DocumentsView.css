@@ -1,0 +1,8 @@
+.folder-list .folder-list-item {
+    display: flex;
+    align-items: center;
+}
+.folder-list-item input {
+    border: none;
+    border-bottom: 1px solid #EEE;
+}

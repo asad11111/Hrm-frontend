@@ -1,0 +1,100 @@
+<div class="ibox">
+    <div class="ibox-title"> General </div>
+    <div class="ibox-content clearfix">
+        <errors [errors]="errors.company"></errors>
+        <form name="companyForm">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="thumbnail">
+                        <img [src]="getLogoUrl()" class="img-responsive">
+                        <div class="caption">
+                            <input-file size="xs"
+                                        (fileChange)="onLogoChange($event)">
+                                Change Logo
+                            </input-file>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Company Name</label>
+                        <input type="text"
+                               class="form-control"
+                               [(ngModel)]="company.name"
+                               name="name"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Person</label>
+                        <input type="text"
+                               class="form-control"
+                               name="contact_person"
+                               [(ngModel)]="company.contact_person"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label>Country</label>
+                        <input type="text"
+                               class="form-control"
+                               [(ngModel)]="company.address.country"
+                               name="country"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label>Street</label>
+                        <input type="text"
+                               class="form-control"
+                               [(ngModel)]="company.address.street"
+                               name="street"
+                        >
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="text"
+                               name="email"
+                               class="form-control"
+                               [(ngModel)]="company.email">
+                    </div>
+                    <div class="form-group">
+                        <label>State/Province</label>
+                        <input type="text"
+                               class="form-control"
+                               [(ngModel)]="company.address.state"
+                               name="state"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text"
+                               class="form-control"
+                               [(ngModel)]="company.address.city"
+                               name="city"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label>Zip Code</label>
+                        <input type="text"
+                               class="form-control"
+                               [(ngModel)]="company.address.zip"
+                               name="zip"
+                        >
+                    </div>
+                    <btn class="pull-right" type="primary" (click)="updateCompany()" [busy]="updatingCompany">
+                        Save
+                    </btn>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<img-crop-modal [src]="logoSrc"
+                (onHide)="logoSrc = null"
+                (onDone)="saveLogo($event)"
+                title="Change Logo">
+</img-crop-modal>

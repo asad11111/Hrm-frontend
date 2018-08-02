@@ -1,0 +1,52 @@
+.profile-avg {
+    display: flex; justify-content: space-between; margin-bottom: 25px;
+    height: 168px;
+}
+.profile-avg-clock {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    background: #0292E3;
+    padding: 0 10px;
+    border-radius: 3px;
+    box-sizing: content-box;
+}
+.profile-avg-clock-body {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+    flex: 1;
+}
+.profile-avg-time {
+    background: #0292E3;
+    padding: 0 10px;
+    border-radius: 3px;
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.profile-avg-time-body {
+    text-align: center;
+    color: #FFF;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    align-items: center;
+}
+.profile-avg-time .profile-avg-time-label {
+    color: #FFF;
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-top: 5px;
+}
+.profile-avg-time h2 {
+    margin: 0;
+}
+.profile-avg-time h2 small {
+    color: #FFF;
+    margin: 0;
+}

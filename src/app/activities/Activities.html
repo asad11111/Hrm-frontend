@@ -1,0 +1,43 @@
+<page-header title="Attendance Reports"></page-header>
+
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-12">
+            <box [busy]="fetching">
+                <div header>
+                    <div class="pull-right" style="margin-top: -5px;">
+                        <datepicker size="sm"
+                                    [value]="date"
+                                    (valueChange)="fetch($event)">
+                        </datepicker>
+                    </div>
+                    <h3 class="box-title">Activities</h3>
+                </div>
+                <div class="ibox-content clearfix" body>
+                    <h2 class="text-center" *ngIf="fetched && activities.length === 0">
+                        No activities has been found on {{date}}
+                    </h2>
+                    <div class="activity-stream">
+                        <div class="stream" *ngFor="let a of activities">
+                            <div class="stream-badge" >
+                                <i [ngClass]="helper.getClass(a)"></i>
+                            </div>
+                            <div class="stream-panel">
+                                <div class="stream-info">
+                                    <a>
+                                        <img [src]="getPicUrl(a.employee_id)" />
+                                        <span>{{employees[a.employee_id].first_name}}
+                                            {{employees[a.employee_id].last_name}}
+                                        </span>
+                                        <span class="date">{{ a.created_on | local | date: 'medium'}}</span>
+                                    </a>
+                                </div>
+                                {{a.description}}.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </box>
+        </div>
+    </div>
+</div>

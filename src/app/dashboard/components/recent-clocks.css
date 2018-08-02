@@ -1,0 +1,11 @@
+.recent-clocks table img {
+    width: 24px;
+    height: 24px;
+
+}
+.recent-clocks .sprite-clock-in-at {
+    vertical-align: middle;
+}
+.recent-clocks .recent-clocks-time {
+    vertical-align: middle;
+}

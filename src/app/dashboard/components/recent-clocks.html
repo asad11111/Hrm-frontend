@@ -1,0 +1,49 @@
+<div class="ibox recent-clocks">
+    <div class="ibox-title">
+        <h5>Recent Clocks</h5>
+        <div class="pull-right">
+            <div class="btn-group">
+                <button type="button"
+                        btnRadio="yesterday"
+                        [(ngModel)]="current"
+                        class="btn btn-xs btn-white"
+                        (click)="fetchRecentClocks.emit('yesterday')">
+                    Yesterday
+                </button>
+                <button type="button"
+                        btnRadio="today"
+                        [(ngModel)]="current"
+                        class="btn btn-xs btn-white"
+                        (click)="fetchRecentClocks.emit('today')">
+                    Today
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="ibox-content clearfix">
+        <h3 *ngIf="data?.clocks && data?.clocks.length == 0" class="text-center">No Recent Clocks</h3>
+        <table class="table td-center table-bordered-inner">
+            <tr *ngFor="let c of data?.clocks">
+                <td>
+                    <img [src]="getEmployeeImage(c.employee_id)" class="img-circle" width="24px" height="24px">
+                    <small>
+                        {{ data.employees[c.employee_id].first_name }}
+                        {{ data.employees[c.employee_id].last_name }}
+                    </small>
+                </td>
+                <td>
+                    <span [ngClass]="['sprite', c.out_at ? 'sprite-clock-in-late' : 'sprite-clock-in-at']" style="vertical-align: middle"></span>
+                    <small class="recent-clocks-time">{{ (c.out_at ? c.out_at:c.in_at) | local | date: 'shortTime'  }}</small>
+                </td>
+                <td>
+                    <span [ngClass]="['sprite', deviceClasses[c.device_id]]"></span>
+                </td>
+            </tr>
+        </table>
+        <button (click)="navigateMore()"
+                *ngIf="permissions.can('Attendance.manage_attendance')"
+                class="btn btn-xs btn-primary pull-right">
+            More
+        </button>
+    </div>
+</div>

@@ -1,0 +1,137 @@
+<div class="row">
+    <div class="col-sm-8">
+        <div class="ibox">
+            <div class="ibox-title"> Roles </div>
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-stripped" style="table-layout: fixed">
+                            <thead>
+                            <tr>
+                                <th>Role</th>
+                                <th>Display Name</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let r of roles">
+                                <td>{{r.name}}</td>
+                                <td>{{r.display_name}}</td>
+                                <td>
+                                    <button class="btn btn-xs btn-inverse"
+                                            (click)="edit(r)"
+                                            [disabled]="r.name == 'admin'">
+                                        Edit
+                                    </button>
+                                    <button class="btn btn-xs btn-danger"
+                                            (click)="destroy(r)"
+                                            [disabled]="r.name == 'admin'">
+                                        Remove
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-sm-4">
+        <div class="ibox">
+            <div class="ibox-title"> Add Role </div>
+            <div class="ibox-content clearfix">
+                <errors [errors]="errors"></errors>
+                <div class="form-group">
+                    <label>Role</label>
+                    <input type="text" class="form-control" [(ngModel)]="role.name"/>
+                </div>
+                <div class="form-group">
+                    <label>Display Name</label>
+                    <input type="text" class="form-control" [(ngModel)]="role.display_name"/>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-default"
+                            *ngIf="role.id"
+                            (click)="cancelEdit()">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary" (click)="role.id ? update() : create()" [disabled]="creating">
+                        <i class="fa fa-circle-o-notch fa-spin fa-fw" *ngIf="creating"></i>
+                        {{ role.id ? 'Save' : 'Create' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-8">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h3>Permissions</h3>
+                </div>
+                <div class="ibox-content clearfix">
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select class="form-control"
+                                [(ngModel)]="selected"
+                                (ngModelChange)="fetchPermissions($event)"
+                        >
+                            <option *ngFor="let r of roles" [ngValue]="r">
+                                {{ r.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <table class="table table-bordered td-center">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Assigned</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <template ngFor let-m [ngForOf]="modules">
+                            <tr style="background-color:#1AB394;color:#ffffff;">
+                                <th>{{m.name}}</th>
+                                <td class="text-center">
+                                    <div class="checkbox">
+                                        <input type="checkbox"
+                                               (change)="togglePermissions(m.id)"
+                                               [disabled]="selected.name == 'admin'">
+                                        <label></label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr *ngFor="let p of modulePermissions[m.id]">
+                                <td>{{p.display_name || p.name}}</td>
+                                <td class="text-center">
+                                    <div class="checkbox checkbox-primary">
+                                        <input type="checkbox"
+                                               (change)="togglePermission(p)"
+                                               [checked]="hasPermissions(p.id)"
+                                               [disabled]="selected.name == 'admin'">
+                                        <label></label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+                        </tbody>
+                    </table>
+                    <div class="row pull-right" style="margin-top: 15px">
+                        <div class="col-md-12">
+                            <btn type="primary"
+                                 (click)="savePermissions()"
+                                 [busy]="savingPermissions"
+                                 [disabled]="selected.name == 'admin'">
+                                Save Permissions
+                            </btn>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>

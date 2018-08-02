@@ -1,0 +1,30 @@
+<div class="ibox">
+  <div class="ibox-title"> Notifications 
+      <button (click)="saveNotification()"  class="btn btn-primary push-right pull-right btn-xs">
+          <i [ngClass]="[processing?'fa-spinner fa-spin':'fa-save' ]" class="fa"></i> Save </button>
+  </div>
+  <div class="ibox-content clearfix">
+      <div class="col-md-6">
+                <div class="form-group">
+                  <label>
+                    <div class="checkbox checkbox-primary">
+                      <input  [(ngModel)]="notify.daily_report" type="checkbox" name="daily_report" value="1" />
+                      <label htmlFor="email_notification"></label>
+                      Email notifications for daily attendance report.
+                    </div>
+                  </label>
+                </div>
+                <div class="form-group">
+                  <label>
+                    <div class="checkbox checkbox-primary">
+                      <input  [(ngModel)]="notify.mobile_attendance" type="checkbox" name="mobile_attendance" value="1" />
+                      <label htmlFor="email_notification"></label>
+                      Mobile notifications for attendance.
+                    </div>
+                  </label>
+                </div>          
+              </div>  
+  </div>
+</div>  
+<confirm #confirmreviewer></confirm>
+<alert #alertpoup></alert>

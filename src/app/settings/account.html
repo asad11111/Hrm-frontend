@@ -1,0 +1,40 @@
+<div class="ibox">
+    <div class="ibox-title"> Account </div>
+    <div class="ibox-content clearfix">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <errors [errors]="errors"></errors>
+                <form name="passwordForm">
+                    <div class="form-group">
+                        <label>Old Password</label>
+                        <input type="password"
+                               class="form-control"
+                               [(ngModel)]="passwords.old_password"
+                               name="old_password"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password"
+                               class="form-control"
+                               [(ngModel)]="passwords.password"
+                               name="password"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <input type="password"
+                               class="form-control"
+                               [(ngModel)]="passwords.confirm_password"
+                               name="confirm_password"
+                        >
+                    </div>
+                    <btn class="pull-right" type="primary" (click)="change()" [busy]="saving">
+                        Change Password
+                    </btn>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

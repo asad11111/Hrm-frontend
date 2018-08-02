@@ -1,0 +1,25 @@
+<div class="ibox">
+    <div class="ibox-title">
+        <ng-container *ngIf="attendance.length !== 0">
+            <div class="pull-right" dropdown>
+                <button type="button" class="btn btn-default btn-xs" dropdownToggle>
+                    {{attendance[index]?.shift}} <span class="caret" *ngIf="attendance.length > 1"></span>
+                </button>
+                <ng-container *ngIf="attendance.length > 1">
+                    <ul *dropdownMenu class="dropdown-menu dropdown-menu-left" >
+                        <li *ngFor="let a of attendance; let i = index">
+                            <a (click)="setIndex(i)">{{a.shift}}</a>
+                        </li>
+                    </ul>
+                </ng-container>
+            </div>
+        </ng-container>
+    <h3>Overall Attendance</h3>
+    </div>
+    <div class="ibox-content">
+        <h2 *ngIf="attendance.length === 0" class="text-center">
+            Shift Not Assigned Current For Month
+        </h2>
+        <canvas #donut height="200px" [hidden]="attendance.length === 0"></canvas>
+    </div>
+</div>

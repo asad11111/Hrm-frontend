@@ -1,0 +1,49 @@
+<page-header title="Employee Leaves"></page-header>
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <box [busy]="fetching">
+                <div header>
+                    <small class="text-bold text-info">
+                        ({{stats.leavesCount || 0}} out of {{stats.totalLeaves}})
+                    </small>
+                    <h3 class="box-title">Leaves</h3>
+                </div>
+                <div class="ibox-content" body>
+                    <h4 class="text-center" *ngIf="fetched && leaves.length == 0">
+                        {{employee.first_name}} {{employee.last_name}} haven't submitted any leave applications yet.
+                    </h4>
+                    <table class="table table-stripped" *ngIf="fetched && leaves.length > 0">
+                        <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Status</th>
+                            <th>From Date</th>
+                            <th>To Date</th>
+                            <th>Days</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let l of leaves">
+                            <td>
+                                <a>
+                                    {{ l.subject }}
+                                </a>
+                            </td>
+                            <td>
+                                <span [ngClass]="['label', labelClasses[l.status]]">
+                                    {{status[l.status]}}
+                                </span>
+                            </td>
+                            <td>{{ l.start_date | date: 'mediumDate' }}</td>
+                            <td>{{ l.end_date | date: 'mediumDate' }}</td>
+                            <td>{{ getDuration(l.start_date, l.end_date) }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </box>
+        </div>
+    </div>
+</div>

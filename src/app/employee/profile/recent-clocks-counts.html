@@ -1,0 +1,19 @@
+<div class="ibox">
+    <div class="ibox-content">
+        <h2 style="margin-top: 0">Overall Clocks</h2>
+        <div style="display: flex; justify-content: space-between">
+            <div class="profile-recent-clocks-count">
+                <span class="sprite sprite-profile-clock-bio"></span>
+                {{ data[3]?.count || '00' }}
+            </div>
+            <div class="profile-recent-clocks-count">
+                <span class="sprite sprite-profile-clock-device"></span>
+                {{ data[2]?.count || '00' }}
+            </div>
+            <div class="profile-recent-clocks-count">
+                <span class="sprite sprite-profile-clock-desktop"></span>
+                {{ data[1]?.count || '00' }}
+            </div>
+        </div>
+    </div>
+</div>

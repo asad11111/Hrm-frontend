@@ -1,0 +1,122 @@
+<page-header title="Manage Clocks"></page-header>
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <box>
+                <div header>
+                    <button
+                    *ngIf="permission.can('Attendance.manage_attendance') || permission.can('Attendance.manage_attendance_own')" 
+                     class="btn btn-primary btn-xs pull-right"
+                            (click)="createClock = {employee_id: employee_id}">
+                        <i class="fa fa-plus"></i> Add Clock
+                    </button>
+                    <h3>Clocks</h3>
+                </div>
+                <div class="ibox-content" body>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label>Employees</label>
+                                <select2 [src]="'/core/api/v1/employees/list'"
+                                         [(value)]="employee_id"
+                                         [placeholder]="'All'"
+                                         [allowClear]="true"
+                                         [format]="'{first_name} {last_name}'"
+                                        *ngIf="permission.can('Attendance.manage_attendance')" 
+                                >
+                                </select2>  
+                                <input type="text" [value]="employee.first_name+' '+employee.last_name" readonly class="form-control" *ngIf="permission.can('Attendance.view_attendance_own') && permission.can('Attendance.manage_attendance')==false"  >                             
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="form-group">
+                                <label>Date</label>
+                                <div style="display: flex;">
+                                    <datepicker [(value)]="date"></datepicker>
+                                    <button class="btn btn-primary"
+                                            (click)="fetch()"
+                                            style="margin-left: 10px"
+                                            [disabled]="!(date || employee_id)">
+                                        Get
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h2 class="text-center" *ngIf="fetched && clocks.data.length === 0">
+                                No Clocks has been found.
+                            </h2>
+                            <spinner *ngIf="fetching"></spinner>
+                            <div *ngIf="fetched && !fetching && clocks.data.length !== 0">
+                                <table class="table table-stripped">
+                                    <thead>
+                                    <tr>
+                                        <th>Employee</th>
+                                        <th>In Time</th>
+                                        <th>Out Time</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr *ngFor="let c of clocks.data">
+                                        <td data-label="Employee">
+                                            {{employees[c.employee_id]?.first_name }}
+                                            {{employees[c.employee_id]?.last_name }}
+                                        </td>
+                                        <td data-label="In at">{{c.in_at | local | date: 'short' }}</td>
+                                        <td data-label="Out at">{{c.out_at | local | date: 'short' }}</td>
+                                        <td data-label="Actions">
+                                            <button class="btn btn-default btn-xs"
+                                                    (click)="clock = c">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-danger btn-xs"
+                                                    (click)="destroy(c)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="pull-right">
+                                    <div class="pull-left pagination-desc">
+                                        Showing {{clocks.from}} to {{clocks.to}} of {{clocks.total}}
+                                    </div>
+                                    <ngb-pagination
+                                            [page]="clocks.current_page"
+                                            [pageSize]="clocks.per_page"
+                                            [collectionSize]="clocks.total"
+                                            (pageChange)="fetch($event)"
+                                            [ellipses]="true"
+                                            [rotate]="true"
+                                            [maxSize]="5"
+                                    >
+                                    </ngb-pagination>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </box>
+        </div>
+    </div>
+</div>
+
+
+
+<edit-clock-modal [clock]="clock"
+                  (onHide)="clock = null"
+                  (onUpdate)="onUpdate($event)"
+>
+</edit-clock-modal>
+<create-clock-modal [clock]="createClock"
+                    [employees]="employees"
+                    (onHide)="createClock = null"
+                    (onCreate)="onCreate($event)"
+>
+</create-clock-modal>
+
+<confirm #confirm></confirm>

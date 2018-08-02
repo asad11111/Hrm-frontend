@@ -1,0 +1,205 @@
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav metismenu" id="side-menu">
+            <li style="height: 60px; background: #1c84c6; display: flex">
+                <img style="margin: auto; max-width: 48px; height: auto" [src]="getLogoUrl()" alt="">
+            </li>
+            <li class="nav-header">
+                <div class="dropdown profile-element" dropdown>
+                    <span>
+                        <img alt="image" width="45" height="45" class="img-circle" [src]="getEmployeePicPath()" />
+                    </span>
+                    <a dropdownToggle class="dropdown-toggle">
+                        <span class="clear">
+                            <span class="block m-t-xs">
+                                <strong *ngIf="superAdmin==true" class="font-bold">
+                                    Super Admin
+                                </strong>
+                                <strong *ngIf="superAdmin==false" class="font-bold">
+                                    {{auth.data.employee.first_name}} {{auth.data.employee.last_name}}
+                                </strong>
+                            </span>
+                            <span class="text-muted text-xs block"> {{ auth.data.designation.name }}
+                                <b class="caret"></b>
+                            </span>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu animated fadeInRight m-t-xs" *dropdownMenu>
+                        <li>
+                            <a [routerLink]="['/', 'employees', auth.data.employee.id]">Profile</a>
+                        </li>
+                        <li>
+                            <a [routerLink]="['/', 'settings']">Settings</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a (click)="logout($event)">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="logo-element">PS</div>
+            </li>
+            <li>
+                <a [routerLink]="['/']">
+                    <span class="sprite sprite-sidenav-dashboard"></span>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+            </li>
+            <li *ngIf="permission.can('Core.view_departments') || permission.can('Core.manage_departments')">
+                <a [routerLink]="['/', 'departments']">
+                    <span class="sprite sprite-sidenav-departments"></span>
+                    <span class="nav-label">Departments</span>
+                </a>
+            </li>
+
+            <li *ngIf="permission.can('Core.view_designations') || permission.can('Core.manage_designations')">
+                <a [routerLink]="['/', 'designations']">
+                    <span class="sprite sprite-sidenav-designations"></span>
+                    <span class="nav-label" style="margin-left: 15px;">Designations</span>
+                </a>
+            </li>
+            <li *ngIf="permission.can('Core.view_employees') || permission.can('Core.manage_employees')">
+                <a [routerLink]="['/', 'employees']">
+                    <span class="sprite sprite-sidenav-employees"></span>
+                    <span class="nav-label" style="margin-left: 18px">Employees</span>
+                </a>
+            </li>
+            <li *ngIf="permission.can('Core.manage_documents')">
+                <a [routerLink]="['/', 'documents']">
+                    <span style="font-size: 1.4em" class="fa fa-file-o"></span>
+                    <span class="nav-label">Documents</span>
+                </a>
+            </li>
+            <li *ngIf="allow('attendance') && auth.hasModule('Attendance')">
+                <a>
+                    <span class="sprite sprite-sidenav-attendance"></span>
+                    <span class="nav-label">Attendance</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level collapse">
+                    <!--<li><a [routerLink]="['/', 'attendance', 'monthly']">Monthly</a></li>                        -->
+                    <li>
+                        <a [routerLink]="['/', 'attendance', 'clocks']">Clocks</a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['/', 'attendance', 'reports']">Reports</a>
+                    </li>
+                    <li *ngIf="permission.can('Attendance.manage_attendance') && auth.hasModule('Attendance')">
+                        <a [routerLink]="['/', 'attendance', 'schedule']">Schedule</a>
+                    </li>
+                </ul>
+            </li>
+            <li *ngIf="auth.hasModule('Attendance')">
+                <a>
+                    <span class="sprite sprite-sidenav-leaves"></span>
+                    <span class="nav-label">Leaves</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level collapse">
+                    <li>
+                        <a routerLink="/leaves">My Leaves</a>
+                    </li>
+                    <li>
+                        <a routerLink="/leaves/submitted">Submitted Leaves</a>
+                    </li>
+                    <li *ngIf="permission.can('Attendance.manage_leaves')">
+                        <a routerLink="/leaves/manage">Manage Leaves</a>
+                    </li>
+                </ul>
+            </li>
+            <li *ngIf="auth.hasModule('Payroll')">
+                <a>
+                    <span style="font-size: 1.4em" class="fa fa-money"></span>
+                    <span class="nav-label">Payroll</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level collapse">
+                    <li>
+                        <a routerLink="/payroll">Payroll</a>
+                    </li>
+                    <li>
+                        <a routerLink="/payroll/salaries">Salaries</a>
+                    </li>
+                </ul>
+            </li>
+            <li *ngIf="auth.hasModule('NZ-Payroll') && permission.can('NZ-Payroll.manage_nz_payroll')">
+                <a>
+                    <span style="font-size: 1.4em" class="fa fa-money"></span>
+                    <span class="nav-label">Payroll</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level collapse">
+                    <li>
+                        <a routerLink="/nz-payroll">Payroll</a>
+                    </li>
+                    <li>
+                        <a routerLink="/nz-payroll/salaries">Salaries</a>
+                    </li>
+                    <!--li>
+                        <a routerLink="/payroll/custom-types">Custom Types</a>
+                    </li-->
+                </ul>
+            </li>
+            <li *ngIf="auth.hasModule('Review')">
+                <a>
+                    <span class="sprite sprite-sidenav-reviews"></span>
+                    <span class="nav-label">Reviews</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level collapse">
+                    <li>
+                        <a [routerLink]="['/', 'review','my-reviews']">
+                            <span class="nav-label">My Reviews</span>
+                        </a>
+                    </li>
+                    <li *ngIf="permission.can('Review.view_assigned_review')">
+                        <a [routerLink]="['/', 'review','assigned-reviews']">
+                            <span class="nav-label">Assigned Reviews</span>
+                        </a>
+                    </li>
+                    <li *ngIf="permission.can('Review.view_questions_categories')">
+                        <a [routerLink]="['/', 'review','reviews','categories']">
+                            <span class="nav-label">Question Categories</span>
+                        </a>
+                    </li>
+                    <li *ngIf="permission.can('Review.view_review_template')">
+                        <a [routerLink]="['/', 'review','reviews']">
+                            <span class="nav-label">Review Templates</span>
+                        </a>
+                    </li>
+                    <li *ngIf="permission.can('Review.view_reviews')">
+                        <a [routerLink]="['/', 'review','reviews','reviews-list']">
+                            <span class="nav-label">Reviews</span>
+                        </a>
+                    </li>
+                    <li *ngIf="permission.can('Review.view_reviews_team')">
+                        <a [routerLink]="['/', 'review','team']">
+                            <span class="nav-label">Team reviews</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <!--<li>
+                <a> <span class="fa fa-cubes fa-2x"></span>
+                    <span class="nav-label">Billing</span>
+                    <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse" >
+                    <li><a [routerLink]="['/','billing','packages']" ><span class="nav-label">Packages</span></a></li>
+                    <li><a [routerLink]="['/','billing','mybills']" ><span class="nav-label">My Bills</span></a></li>
+                </ul>
+            </li>             -->
+            <li *ngIf="auth.hasModule('Attendance') && permission.can('Attendance.manage_holidays')">
+                <a [routerLink]="['/', 'holidays']">
+                    <span class="sprite sprite-sidenav-holidays"></span>
+                    <span class="nav-label">Holidays</span>
+                </a>
+            </li>
+            <li *ngIf="permission.can('Core.view_activities')">
+                <a [routerLink]="['/', 'activities']">
+                    <span style="font-size: 1.4em" class="fa fa-tasks"></span>
+                    <span class="nav-label">Activities</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>

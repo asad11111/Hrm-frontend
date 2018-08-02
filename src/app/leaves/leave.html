@@ -1,0 +1,108 @@
+<modal [show]="show"
+       (hide)="onHide.emit()"
+       title="Leave Application">
+    <div body *ngIf="leave" class="clearfix">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="pull-right"
+                     style="position: absolute; right: 40px; top: -15px"
+                     *ngIf="leave.status != 0">
+                    <img [src]="getStatusImage(leave)" style="width: 120px; height: 120px">
+                </div>
+                <div class="pull-right" style="margin-top: 5px" *ngIf="isSubmittedToCurrentUser()">
+                    <ng-container *ngFor="let r of requests">
+                        <ng-container *ngIf="r.employee_id === auth.data.employee.id && leave.status == '0'">
+                            <btn type="danger"
+                                 [icon]="'fa fa-close'"
+                                 [size]="'xs'"
+                                 (click)="submit('2', r)"
+                                 [disabled]="leave.status !== '0'"
+                            >Reject 
+                            </btn>
+                            <btn type="success"
+                                 [icon]="'fa fa-check-circle'"
+                                 [size]="'xs'"
+                                 (click)="submit('1', r)"
+                                 [disabled]="leave.status !== '0'"
+                            >Approve
+                            </btn>
+                        </ng-container>
+                    </ng-container>
+                </div>
+                <div>
+                    <h5>
+                        To:
+                        <ng-container *ngFor="let r of requests; let i = index">
+                            <span [ngStyle]='i != 0 ? {margin: "4px 0 0 20px", display: "inline-block"} : {}'>
+                                <span>
+                                {{ employees[r.employee_id]?.first_name }}
+                                {{ employees[r.employee_id]?.last_name }} -
+                                </span>
+                                <span [ngClass]="'text '+textClasses[r.status]">
+                                    {{ status[r.status] }}
+                                </span>
+                            </span>
+                            <br>
+                        </ng-container>
+                    </h5>
+                    <h5>
+                        From: {{ employees[leave.submitted_by]?.first_name }}
+                        {{ employees[leave.submitted_by]?.last_name }} -
+
+                        <span class="text-bold text-danger" *ngIf="auth.data.employee.id == leave.submitted_to">
+                            ({{ leavesCount.leavesCount || 0 }}/{{leavesCount.totalLeaves}})
+                        </span>
+                    </h5>
+                    <h5>
+                        Status:
+                        <span class="label" [ngClass]="getLabelClass(leave.status)">
+                            {{ status[leave.status] }}
+                        </span>
+                    </h5>
+                    <p class="text-bold">Subject: {{ leave.subject }}</p>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                {{ leave.text }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="pull-right" style="margin-right: 20px">
+                    <h5>
+                        Start: {{ leave.start_date | date: 'mediumDate' }}
+                    </h5>
+                    <h5>
+                        End: {{ leave.end_date | date: 'mediumDate'  }}
+                    </h5>
+                    <h5>
+                        Duration: {{ getDuration() + 1 }} Day
+                    </h5>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <ng-container *ngFor="let r of requests">
+                    <ng-container *ngIf="leave.submitted_by == auth.data.employee.id">
+                        <div *ngIf="r.status != 0 && leave.remarks">
+                            <span class="text-bold">Remarks:</span>
+                            <span>{{leave.remarks}}</span>
+                        </div>
+                    </ng-container>
+                    <div *ngIf="auth.data.employee.id == r.employee_id && r.status == '0'">
+                        <textarea placeholder="Remarks"
+                                  class="form-control"
+                                  [(ngModel)]="r.remarks">
+                        </textarea>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+    <div footer >
+    </div>
+</modal>

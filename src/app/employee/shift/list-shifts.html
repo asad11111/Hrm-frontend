@@ -1,0 +1,38 @@
+<div class="clearfix" *ngIf="state.shifts.length !== 0">
+    <div class="pull-right">
+        <button type="button"
+                class="btn btn-success btn-xs"
+                (click)="newShift()">
+            <i class="fa fa-plus-circle"></i> Assign
+        </button>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let s of state.shifts">
+            <td>{{s.shift.name}}</td>
+            <td>{{s.started_on | date: 'mediumDate'}}</td>
+            <td>{{s.ended_on | date: 'mediumDate'}}</td>
+            <td>
+                <button class="btn btn-xs btn-default" (click)="editShift(s)">
+                    <span class="fa fa-edit"></span>
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div *ngIf="state.shifts.length === 0 && state.fetched" class="text-center">
+    <h4>No shifts are assigned</h4>
+    <button class="btn btn-success btn-sm" (click)="newShift()">
+        <i class="fa fa-plus-circle"></i>
+        Assign
+    </button>
+</div>

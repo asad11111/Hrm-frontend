@@ -1,0 +1,51 @@
+<div class="ibox">
+  <div class="ibox-title"> Modules </div>
+  <div class="ibox-content">
+
+        <table class="table table-stripped">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Installed</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let m of modules">
+                <td>{{m.name}}</td>
+                <td>
+                    <div [ngSwitch]="isInstalled(m.id)">
+                        <button class="btn btn-primary btn-xs" *ngSwitchCase="true" [disabled]="m.id == 1">
+                            {{ isActive(m.id) ? 'Disable':'Enable'}}
+                        </button>
+                        <span *ngSwitchCase="false">Not Installed</span>
+                    </div>
+                </td>
+                <td>
+                    <div [ngSwitch]="isInstalled(m.id)">
+                        <btn type="primary"
+                             size="xs"
+                             *ngSwitchCase="false"
+                             (click)="installModule(m)"
+                             [busy]="m.installing">
+                            <i class="fa fa-arrow-down"></i>
+                            Install
+                        </btn>
+                        <btn type="primary"
+                             size="xs"
+                             *ngSwitchCase="true"
+                             (click)="uninstallModule(m.id)"
+                             [disabled]="m.id == 1">
+                            <i class="fa fa-remove"></i>
+                            Uninstall
+                        </btn>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+
+
+  </div>
+</div>

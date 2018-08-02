@@ -1,0 +1,57 @@
+<page-header title="Reviews List"></page-header> 
+<div class="wrapper wrapper-content  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox">
+        <div class="ibox-title">
+          <h5 class="box-title">Reviews</h5>
+          <div class="pull-right" *ngIf="permission.can('Review.create_reviews')">
+            <a routerLink="/review/reviews/create" class="btn btn-primary btn-xs"><i class="fa fa-plus" ></i> Create new review</a>            
+          </div>
+        </div>
+        <div class="ibox-content">
+            <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Review Type</th>
+                <th>Frequency</th>
+                <th>Deadline Date</th>
+                <th>Pending reviews</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let d of reviews?.data" id="review_{{d.id}}" >
+                <td><a [routerLink]="['/review', 'reviews', d.id]"> {{ d.title }}</a> <br> (<small>{{d.session_title}}</small>)</td>
+                <td>{{ d.reviewstype }}</td>
+                <td>{{ d.frequency }}</td>
+                <td>{{ d.deadline_date }}</td>
+                <td><span *ngIf="d.status_review >= 0 && d.status<3 " class="label label-warning">Pending {{"("+ d.pendingreviews +" / " + d.totalreviews }}  )</span>
+                  <span *ngIf="d.status_review < 0 && d.status<=3" class="label label-danger">Expired</span>
+                </td>
+                <td [ngSwitch]="d.status">
+                  <span class="btn btn-xs btn-success" *ngSwitchCase="1">Published</span>
+                  <span class="btn btn-xs btn-info" *ngSwitchCase="2">Draft</span>
+                  <span class="btn btn-xs btn-success" *ngSwitchCase="3">Completed</span>
+                  <span class="btn btn-xs btn-danger" *ngSwitchCase="0">Disabled</span>
+                </td>
+                <td>
+                  <button *ngIf="d.status==2" (click)="remove_review(d)" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash" ></i></button>
+                  <a [routerLink]="['/review', 'reviews', d.id]" class="btn btn-info btn-xs"><i class="glyphicon glyphicon-edit" ></i></a>
+                  <a *ngIf="d.status==1" [routerLink]="['/review', 'reviews', d.id,'details']" class="btn btn-primary btn-xs"><i class="fa fa-folder-open-o" ></i></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <pagination class="pull-right" (pageChanged)="load_reviews($event.page)" [perPage]="reviews.per_page" [items]="reviews.total"
+            [(ngModel)]="reviews.current_page"></pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
+<!--    Existing code......   -->
+<confirm #confirmreviewer></confirm>
+<alert #alertpoup></alert>

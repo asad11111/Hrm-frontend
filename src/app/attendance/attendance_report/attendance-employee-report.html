@@ -1,0 +1,89 @@
+<div class="row">
+    <div class="col-lg-3">
+        <div class="form-group">
+            <label>Employees</label>
+            <select2 [src]="'/core/api/v1/employees/list'"
+                     [format]="'{first_name} {last_name}'"
+                     [value]="employee_id"
+                     placeholder="Search Employee By Name"
+                     [allowClear]="true"
+                     (valueChange)="(employee_id = $event) && fetch()"
+                     *ngIf="permissions.can('Attendance.manage_attendance')"
+            >
+            </select2>
+            <input type="text" class="form-control" [value]="employee.first_name+' '+employee.last_name" readonly
+            *ngIf="!permissions.can('Attendance.manage_attendance') && permissions.can('Attendance.view_attendance_own')"
+             >
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="form-group">
+            <label>Date</label>
+            <div [ngClass]="['input-group', 'input-daterange', validateDateRange() ? '' : 'has-error']">
+                <datepicker [(value)]="from" (valueChange)="fetch()"></datepicker>
+                <div class="input-group-addon">to</div>
+                <datepicker [(value)]="till" (valueChange)="fetch()"></datepicker>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="form-group">
+            <label style="color: #FFF">_</label>
+            <div>
+                <button class="btn btn-primary"
+                        (click)="fetch()"
+                        style="margin-left: 10px"
+                        [disabled]="!(from && till && employee_id)">
+                    <i class="fa fa-refresh"></i>
+                </button>
+                <button class="btn btn-success"
+                        style="margin-left: 10px"
+                        (click)="toCsv()"
+                        [disabled]="!fetching.completed"
+                ><i class="fa fa-file-excel-o"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <spinner *ngIf="fetching.inProgress"></spinner>
+        <h2 class="text-center" *ngIf="fetching.completed && data.length === 0">
+            No Records Found
+        </h2>
+        <div class="table-responsive">
+            <table class="table table-bordered td-center text-center"
+                   *ngIf="fetching.completed && data.length !== 0" #table>
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>First In</th>
+                    <th>Last Out</th>
+                    <th>Total Duration</th>
+                    <th>Working Duration</th>
+                    <th>OverTime</th>
+                    <th>Status</th>
+                    <th>Shift</th>
+                </tr>
+                </thead>
+                <tbody>
+                <ng-container *ngFor="let d of data | keyVal">
+                    <tr *ngFor="let r of d.value; let i = index;">
+                        <td *ngIf="i == 0" [attr.rowspan]="d.value.length">{{ r.monthdate }}</td>
+                        <td>{{r.in_at ? (r.in_at | local | date: 'shortTime') : '--:--'}}</td>
+                        <td>{{r.out_at ? (r.out_at | local | date: 'shortTime') : '--:--'}}</td>
+                        <td>{{toHour(r.shift_duration,'m')}}</td>
+                        <td>{{toHour(r.working_minutes,'m')}}</td>
+                        <td *ngIf="i == 0" [attr.rowspan]="d.value.length"> {{overTime(r)}} </td>
+                        <td>
+                            <div  [ngClass]="['label', getLabel(r)]" > {{getStatus(r)}}  </div>
+                        </td>
+                        <td>{{ r.shift  }}</td>
+                    </tr>
+                </ng-container>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,31 @@
+<div class="ibox">
+    <div class="ibox-title">
+        <h5>Top Performers</h5>
+        <div class="pull-right">
+            <div class="btn-group">
+                <button type="button" class="btn btn-xs btn-white">Week</button>
+                <button type="button" class="btn btn-xs btn-white">Month</button>
+                <button type="button" class="btn btn-xs btn-white">Year</button>
+            </div>
+        </div>
+    </div>
+
+    <div style="background: #FFF">
+
+        <table class="table table-bordered td-center" *ngIf="loadData(performData)"  >
+            <tr   *ngFor="let d of loadList(performData);" >
+                <td>
+                    <img  [src]="getEmployeeImage(d)" alt="" class="img-circle user-img-xs">
+                    <span>{{getName(d,performData)}}</span>
+                </td>
+                <td>                                        
+                    <small class="fa fa-star{{createStar(d,25)}}"></small>
+                    <small class="fa fa-star{{createStar(d,50)}}"></small>
+                    <small class="fa fa-star{{createStar(d,75)}}"></small>
+                    <small class="fa fa-star{{createStar(d,100)}}"></small>
+                    <span class="text-info">{{d.totalrating/d.num_reviews}}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

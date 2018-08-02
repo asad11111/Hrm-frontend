@@ -1,0 +1,49 @@
+<div class="profile-avg">
+    <div class="profile-avg-clock">
+        <div class="btn-group">
+            <ng-container *ngFor="let io of inOutTime; let i = index">
+                <button type="button"
+                        class="btn btn-xs btn-white"
+                        [(ngModel)]="inOutIndex"
+                        [btnRadio]="i">
+                    {{io.shift.charAt(0)}}
+                </button>
+            </ng-container>
+        </div>
+        <div class="profile-avg-clock-body">
+            <div class="office-timing-avg-clock">
+                <span class="sprite sprite-average-clock-in"></span>
+                <div class="office-timing-avg-clock-text">
+                    <div class="office-timing-avg-clock-text-label">Average Clock In</div>
+                    <h1 [innerHtml]="formatTime(inOutTime[inOutIndex]?.avg_in_time ? (inOutTime[inOutIndex]?.avg_in_time | local: 'HH:mm:ss' | date: 'shortTime') : null)">
+                    </h1>
+                </div>
+            </div>
+            <div class="office-timing-avg-clock">
+                <span class="sprite sprite-average-clock-in"></span>
+                <div class="office-timing-avg-clock-text">
+                    <div class="office-timing-avg-clock-text-label">Average Clock Out</div>
+                    <h1 [innerHtml]="formatTime(inOutTime[inOutIndex]?.avg_out_time ? (inOutTime[inOutIndex]?.avg_out_time | local: 'HH:mm:ss' | date: 'shortTime') : null)">
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="profile-avg-time">
+        <div class="btn-group">
+            <ng-container *ngFor="let io of inTime; let i = index">
+                <button type="button"
+                        class="btn btn-xs btn-white"
+                        [(ngModel)]="inTimeIndex"
+                        [btnRadio]="i">
+                    {{io.shift.charAt(0)}}
+                </button>
+            </ng-container>
+        </div>
+        <div class="profile-avg-time-body">
+            <div class="sprite sprite-clock-lg"></div>
+            <div class="profile-avg-time-label">Average Time in Office</div>
+            <h2>{{inTime[inTimeIndex]?.avg_time_in || '00:00'  | moment: 'HH:mm:ss':'HH:mm' }} <small>HOURS</small></h2>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,66 @@
+<edit-department
+        [departments]="res"
+        [department]="editDepartment"
+        (onCancel)="editDepartment = null"
+        (onUpdate)="updated($event)">
+</edit-department>
+<add-department
+        [departments]="res"
+        [department]="addDepartment"
+        (onCancel)="addDepartment = null"
+        (onCreate)="created($event)">
+</add-department>
+
+<page-header title="Departments">
+</page-header>
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <box [busy]="fetching">
+        <div header>
+          <h5>Departments</h5>
+          <div class="pull-right" *ngIf="permission.can('Core.manage_departments')">
+            <button class="btn btn-primary btn-xs" (click)="addDepartment = {}">
+              <i class="fa fa-plus"></i> Add Department
+            </button>
+          </div>
+        </div>
+        <div class="ibox-content" body>
+          <retry [show]="failed && !fetching" (retry)="fetchDepartments()"></retry>
+          <table class="table table-stripped" *ngIf="fetched">
+            <thead>
+            <tr>
+              <th>Name</th>
+              <th>Employees</th>
+              <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let d of res.data">
+              <td data-label="Name"><a [routerLink]="['/','employees',d.id, 'department_id']">{{ d.name }}</a></td>
+              <td data-label="Employees">{{d.number_of_employees || 0}}</td>
+              <td data-label="Actions">
+                  <div *ngIf="permission.can('Core.manage_departments')">
+                    <button (click)="edit(d)"
+                            class="btn btn-xs btn-default">
+                      <i class="glyphicon glyphicon-edit"></i>
+                    </button>
+                    <button (click)="destroy(d)"
+                            class="btn btn-xs btn-danger">
+                      <i class="glyphicon glyphicon-trash"></i>
+                    </button>
+
+                  </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </box>
+    </div>
+  </div>
+</div>
+
+<confirm #confirm></confirm>
+<alert #alert></alert>

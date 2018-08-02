@@ -1,0 +1,36 @@
+.leave_stat{
+    position: absolute;
+    width: 147px;
+    top: 182px;  
+}
+
+    @media screen and (min-width: 1371px ) {    
+        .leave_stat{
+            margin-left: 61%;
+            }
+        
+        }
+
+    @media screen and (max-width: 1370px) and (min-width:960px) {
+        .leave_stat{
+            margin-left: 44%;
+            }
+        }
+
+    @media screen and (max-width: 959px) and (min-width:700px) {
+       .leave_stat{
+           margin-left: 63%;
+             }
+       }  
+       
+       @media screen and (max-width: 699px) and (min-width:450px) {
+        .leave_stat{
+            margin-left: 53%;
+              }
+        }
+        @media screen and (max-width: 449px) and (min-width:300px) {
+            .leave_stat{
+                margin-left:41%;
+                  }
+            }
+    

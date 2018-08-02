@@ -1,0 +1,107 @@
+.organization_tree .toggle-children{
+    background: none ;
+    
+}
+
+.organization_tree .toggle-children-wrapper-expanded .toggle-children {
+    transform: rotate(0);
+}
+.organization_tree .toggle-children{
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height:40px;
+}
+
+.organization_tree .toggle-children:before{content:"\F067"}
+
+.organization_tree .toggle-children-wrapper-expanded .toggle-children:before{content:"\F068"}
+
+.organization_tree .node-content-wrapper {
+    padding:7px 5px; 
+    width: 100%;
+}
+
+.organization_tree .toggle-children-wrapper {
+    padding: 5px 5px 5px 5px;
+}
+ 
+.organization_tree .toggle-children-placeholder {
+    height:17px;
+    width: 19px;
+    border-bottom: 1px dotted #000;
+}
+
+.margin-left-md{
+    margin-left: 30px;
+}
+/*.fa-minus:before{content:"\F068"}*/
+
+.tree-children{
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAMSURBVBhXY2BgYAAAAAQAAVzN/2kAAAAASUVORK5CYII="); 
+    background-position:9px 0px;
+    background-repeat: repeat-y;
+}
+
+.dotted .tree-children {
+   background-image: url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wgARCAACAAEDAREAAhEBAxEB/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQBAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhADEAAAAF9P/8QAGxAAAAcBAAAAAAAAAAAAAAAAAAUHCBlYl9T/2gAIAQEAAT8AidaxWlAM8KOcf//EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQIBAT8Af//EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQMBAT8Af//Z"); 
+}
+.tree{
+    width: 98%;
+    padding: 15px 1%;
+}
+.tree .input-xs 
+    {
+    height: 25px;
+    padding:3px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+} 
+.no-padding .form-controle{
+    width: 98%;
+}
+.tree-node-loading{
+    display: none;
+}
+
+.tree-main-containter{
+    width: 650px ! important;
+}
+
+.bordered{
+    background: #ddd;
+}
+
+.bordered input,.bordered select{
+    border: 1px solid #286090;
+}
+.margin-right-headings{
+    margin-right: 26px;
+}
+.toggle-children{ background:none !important;}
+
+.organization_tree input{
+    width: 96%;
+         
+}
+
+.employee_list{
+    max-height: 400px;
+    overflow-y: scroll;
+}
+
+.employee_list li{
+    list-style: none;    
+    width: 46%;
+    padding: 10px 2%;
+    float: left;
+}
+.border_bottm{
+    border-bottom: 1px solid #ddd;
+}
+/* Tree css */
+

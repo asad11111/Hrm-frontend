@@ -1,0 +1,76 @@
+<modal [show]="payroll != null"
+       (hide)="onHide.emit()"
+       title="Create Payroll">
+    <div body>
+
+        <errors [errors]="errors"></errors>
+
+        <form name="createPayrollForm" *ngIf="payroll">
+
+            <div class="form-group">
+                <label>Title</label>
+                <input name="title" class="form-control" [(ngModel)]="title">
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>From</label>
+                        <datepicker [(value)]="start_date"></datepicker>
+                        <!--<select class="form-control" name="month" [(ngModel)]="month">-->
+                            <!--<option *ngFor="let m of months; let i = index;" [value]="i + 1">{{ m }}</option>-->
+                        <!--</select>-->
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Till</label>
+                        <datepicker [(value)]="end_date"></datepicker>
+                        <!--<select class="form-control" name="year" [(ngModel)]="year">-->
+                            <!--<option *ngFor="let y of years" [value]="y">{{ y }}</option>-->
+                        <!--</select>-->
+                    </div>
+                </div>
+            </div>
+
+            <div style="max-height: 300px; overflow-y: scroll">
+                <table class="table table-bordered td-center">
+                    <tr>
+                        <th>#</th>
+                        <th>Employee</th>
+                        <th>
+                            <div class="checkbox">
+                                <input type="checkbox" (change)="toggleAllEmployees($event)"/>
+                                <label></label>
+                            </div>
+                        </th>
+                    </tr>
+                    <tr *ngFor="let e of employees | values; let i=index">
+                        <td>{{i + 1}}</td>
+                        <td style="vertical-align: middle">
+                            {{e.first_name}} {{e.last_name}}
+                        </td>
+                        <td>
+                            <div class="checkbox">
+                                <input type="checkbox"
+                                       [checked]="employeeIds.indexOf(e.id) !== -1"
+                                       (change)="toggleEmployee($event.target.checked, e.id)"
+                                >
+                                <label></label>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </form>
+    </div>
+    <div footer>
+
+        <button class="btn btn-primary"
+                (click)="save()">
+            <i class="fa fa-check-circle-o"></i>
+            Create
+        </button>
+
+    </div>
+</modal>

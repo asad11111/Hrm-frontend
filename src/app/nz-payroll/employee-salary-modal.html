@@ -1,0 +1,41 @@
+<modal [show]="salary != null"
+       (hide)="onHide.emit()"
+       [size]="'sm'"
+       [title]="salary?.id ? 'Edit Salary' : 'New Salary'">
+    <div body>
+        <errors [errors]="errors"></errors>
+        <form name="employeeSalaryForm" *ngIf="salary">
+            <div class="form-group">
+                <label>Employee</label>
+                <select2 [src]="'/core/api/v1/employees/list'"
+                         [size]="'sm'"
+                         [(value)]="salary.employee_id"
+                         [format]="'{first_name} {last_name}'"
+                         disabled="true"
+                ></select2>
+            </div>
+            <div class="form-group">
+                <label>Type</label>
+                <input type="text"
+                       [(ngModel)]="salary.type"
+                       name="type"
+                       class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Salary</label>
+                <input type="text"
+                       [(ngModel)]="salary.salary"
+                       name="salary"
+                       class="form-control" />
+            </div>
+        </form>
+    </div>
+    <div footer>
+        <btn type="primary"
+             icon="fa fa-check-circle-o"
+             [busy]="saving"
+             (click)="save(salary)">
+            Submit
+        </btn>
+    </div>
+</modal>
